@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="pers.liujunyi.bookkeeping.mapper.TCoreLogsMapper" >
+  <resultMap id="BaseResultMap" type="pers.liujunyi.bookkeeping.entity.TCoreLogs" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="log_method" property="logMethod" jdbcType="VARCHAR" />
+    <result column="log_module" property="logModule" jdbcType="VARCHAR" />
+    <result column="log_operation" property="logOperation" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="VARCHAR" />
+    <result column="log_type" property="logType" jdbcType="VARCHAR" />
+    <result column="login_ip" property="loginIp" jdbcType="VARCHAR" />
+    <result column="table_code" property="tableCode" jdbcType="VARCHAR" />
+    <result column="table_name" property="tableName" jdbcType="VARCHAR" />
+    <result column="attribute_one" property="attributeOne" jdbcType="VARCHAR" />
+    <result column="attribute_two" property="attributeTwo" jdbcType="VARCHAR" />
+    <result column="attribute_three" property="attributeThree" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="pers.liujunyi.bookkeeping.entity.TCoreLogsWithBLOBs" extends="BaseResultMap" >
+    <result column="log_content" property="logContent" jdbcType="LONGVARCHAR" />
+    <result column="log_params" property="logParams" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, log_method, log_module, log_operation, create_date, log_type, login_ip, 
+    table_code, table_name, attribute_one, attribute_two, attribute_three
+  </sql>
+  <sql id="Blob_Column_List" >
+    log_content, log_params
+  </sql>
+ 
+  <!-- 查询日志列表 -->
+  <select id="findLogsList" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_core_logs
+    where 1 = 1
+    <if test="userId != null and  userId != '' ">
+       and user_id in (select id from t_core_user where user_nickname like #{userId,jdbcType=VARCHAR})
+    </if>
+    <if test="logType != null and  logType != '' ">
+       and log_type = #{logType,jdbcType=CHAR}
+    </if>
+    <if test="log_module != null and  log_module != '' ">
+       and log_module = #{log_module,jdbcType=VARCHAR}
+    </if>
+    <if test="logOperation != null and  logOperation != '' ">
+       and log_operation = #{logOperation,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+   <!-- 根据ID查询日志详情 -->
+  <select id="getTCoreLogsInfo" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_core_logs
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+ 
+  <!-- 新增信息 -->
+  <insert id="addLogs" parameterType="pers.liujunyi.bookkeeping.entity.TCoreLogs" >
+    <!-- 生成主键的uuid -->
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">  
+        select  replace(uuid(),'-','')  from dual  
+    </selectKey>  
+    insert into t_core_logs
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="logMethod != null" >
+        log_method,
+      </if>
+      <if test="logModule != null" >
+        log_module,
+      </if>
+      <if test="logOperation != null" >
+        log_operation,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="logType != null" >
+        log_type,
+      </if>
+      <if test="loginIp != null" >
+        login_ip,
+      </if>
+      <if test="tableCode != null" >
+        table_code,
+      </if>
+      <if test="tableName != null" >
+        table_name,
+      </if>
+      <if test="attributeOne != null" >
+        attribute_one,
+      </if>
+      <if test="attributeTwo != null" >
+        attribute_two,
+      </if>
+      <if test="attributeThree != null" >
+        attribute_three,
+      </if>
+      <if test="logContent != null" >
+        log_content,
+      </if>
+      <if test="logParams != null" >
+        log_params,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="logMethod != null" >
+        #{logMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="logModule != null" >
+        #{logModule,jdbcType=VARCHAR},
+      </if>
+      <if test="logOperation != null" >
+        #{logOperation,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="logType != null" >
+        #{logType,jdbcType=VARCHAR},
+      </if>
+      <if test="loginIp != null" >
+        #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null" >
+        #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tableName != null" >
+        #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeOne != null" >
+        #{attributeOne,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeTwo != null" >
+        #{attributeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeThree != null" >
+        #{attributeThree,jdbcType=VARCHAR},
+      </if>
+      <if test="logContent != null" >
+        #{logContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="logParams != null" >
+        #{logParams,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 更新信息 -->
+  <update id="updateLogs" parameterType="pers.liujunyi.bookkeeping.entity.TCoreLogs" >
+     update t_core_logs
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="logMethod != null" >
+        log_method = #{logMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="logModule != null" >
+        log_module = #{logModule,jdbcType=VARCHAR},
+      </if>
+      <if test="logOperation != null" >
+        log_operation = #{logOperation,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="logType != null" >
+        log_type = #{logType,jdbcType=VARCHAR},
+      </if>
+      <if test="loginIp != null" >
+        login_ip = #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="tableCode != null" >
+        table_code = #{tableCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tableName != null" >
+        table_name = #{tableName,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeOne != null" >
+        attribute_one = #{attributeOne,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeTwo != null" >
+        attribute_two = #{attributeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeThree != null" >
+        attribute_three = #{attributeThree,jdbcType=VARCHAR},
+      </if>
+      <if test="logContent != null" >
+        log_content = #{logContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="logParams != null" >
+        log_params = #{logParams,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 删除信息 -->
+  <delete id="deleteLogs">
+     delete from t_core_logs where id in
+     <foreach collection="array" item="item" open="(" separator="," close=")">
+        ${item,jdbcType=VARCHAR}
+     </foreach>
+  </delete>
+  
+</mapper>

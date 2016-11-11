@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.liujunyi.bookkeeping.mapper.ICoreUserMapper">
+
+  <!-- 返回用户list列表 -->
+  <resultMap type="pers.liujunyi.bookkeeping.entity.TCoreUser" id="userResultMap">
+      <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+    <result column="login_user" property="loginUser" jdbcType="VARCHAR" />
+    <result column="login_pwd" property="loginPwd" jdbcType="VARCHAR" />
+    <result column="user_nickname" property="userNickname" jdbcType="VARCHAR" />
+    <result column="user_realname" property="userRealname" jdbcType="VARCHAR" />
+    <result column="user_original" property="userOriginal" jdbcType="VARCHAR" />
+    <result column="user_sex" property="userSex" jdbcType="CHAR" />
+    <result column="nationality_id" property="nationalityId" jdbcType="VARCHAR" />
+    <result column="user_birthday" property="userBirthday" jdbcType="VARCHAR" />
+    <result column="id_type" property="idType" jdbcType="CHAR" />
+    <result column="id_number" property="idNumber" jdbcType="VARCHAR" />
+    <result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
+    <result column="user_qq" property="userQq" jdbcType="VARCHAR" />
+    <result column="user_wechat" property="userWechat" jdbcType="VARCHAR" />
+    <result column="weibo" property="weibo" jdbcType="VARCHAR" />
+    <result column="user_portrait" property="userPortrait" jdbcType="VARCHAR" />
+    <result column="user_level" property="userLevel" jdbcType="INTEGER" />
+    <result column="user_type" property="userType" jdbcType="CHAR" />
+    <result column="user_email" property="userEmail" jdbcType="VARCHAR" />
+    <result column="user_job" property="userJob" jdbcType="VARCHAR" />
+    <result column="user_province" property="userProvince" jdbcType="VARCHAR" />
+    <result column="user_city" property="userCity" jdbcType="VARCHAR" />
+    <result column="user_district" property="userDistrict" jdbcType="VARCHAR" />
+    <result column="user_addr" property="userAddr" jdbcType="VARCHAR" />
+    <result column="user_remarks" property="userRemarks" jdbcType="VARCHAR" />
+    <result column="user_integral" property="userIntegral" jdbcType="REAL" />
+    <result column="is_activate" property="isActivate" jdbcType="CHAR" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="CHAR" />
+    <result column="is_admin" property="isAdmin" jdbcType="CHAR" />
+    <result column="create_date" property="createDate" jdbcType="VARCHAR" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="VARCHAR" />
+    <result column="login_date" property="loginDate" jdbcType="VARCHAR" />
+    <result column="out_date" property="outDate" jdbcType="VARCHAR" />
+    <result column="is_online" property="isOnline" jdbcType="CHAR" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="attribute_one" property="attributeOne" jdbcType="VARCHAR" />
+    <result column="attribute_two" property="attributeTwo" jdbcType="VARCHAR" />
+    <result column="attribute_three" property="attributeThree" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!-- 基本字段 -->
+  <sql id="base_column_list">
+      id, user_code, login_user, login_pwd, user_nickname, user_realname, user_original, 
+      user_sex, nationality_id, user_birthday, id_type, id_number, user_phone, user_qq, 
+      user_wechat, weibo, user_portrait, user_level, user_type, user_email, user_job, user_province, 
+      user_city, user_district, user_addr, user_remarks, user_integral, is_activate, delete_flag, 
+  	  is_admin, create_date, update_user, update_date, login_date, out_date, is_online, 
+   	  version, attribute_one, attribute_two, attribute_three
+  </sql>
+  
+  <!-- 插入数据 -->
+  <insert id="addUser" parameterType="coreUser">
+     <!-- 生成主键的uuid -->
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">  
+        select  replace(uuid(),'-','')  from dual  
+    </selectKey>  
+    <!-- 插入数据sql-->
+    insert into t_core_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userCode != null" >
+        user_code,
+      </if>
+      <if test="loginUser != null" >
+        login_user,
+      </if>
+      <if test="loginPwd != null" >
+        login_pwd,
+      </if>
+      <if test="userNickname != null" >
+        user_nickname,
+      </if>
+      <if test="userRealname != null" >
+        user_realname,
+      </if>
+      <if test="userOriginal != null" >
+        user_original,
+      </if>
+      <if test="userSex != null" >
+        user_sex,
+      </if>
+      <if test="nationalityId != null" >
+        nationality_id,
+      </if>
+      <if test="userBirthday != null" >
+        user_birthday,
+      </if>
+      <if test="idType != null" >
+        id_type,
+      </if>
+      <if test="idNumber != null" >
+        id_number,
+      </if>
+      <if test="userPhone != null" >
+        user_phone,
+      </if>
+      <if test="userQq != null" >
+        user_qq,
+      </if>
+      <if test="userWechat != null" >
+        user_wechat,
+      </if>
+      <if test="weibo != null" >
+        weibo,
+      </if>
+      <if test="userPortrait != null" >
+        user_portrait,
+      </if>
+      <if test="userLevel != null" >
+        user_level,
+      </if>
+      <if test="userType != null" >
+        user_type,
+      </if>
+      <if test="userEmail != null" >
+        user_email,
+      </if>
+      <if test="userJob != null" >
+        user_job,
+      </if>
+      <if test="userProvince != null" >
+        user_province,
+      </if>
+      <if test="userCity != null" >
+        user_city,
+      </if>
+      <if test="userDistrict != null" >
+        user_district,
+      </if>
+      <if test="userAddr != null" >
+        user_addr,
+      </if>
+      <if test="userRemarks != null" >
+        user_remarks,
+      </if>
+      <if test="userIntegral != null" >
+        user_integral,
+      </if>
+      <if test="isActivate != null" >
+        is_activate,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+      <if test="isAdmin != null" >
+        is_admin,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="loginDate != null" >
+        login_date,
+      </if>
+      <if test="outDate != null" >
+        out_date,
+      </if>
+      <if test="isOnline != null" >
+        is_online,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="attributeOne != null" >
+        attribute_one,
+      </if>
+      <if test="attributeTwo != null" >
+        attribute_two,
+      </if>
+      <if test="attributeThree != null" >
+        attribute_three,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userCode != null" >
+        #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="loginUser != null" >
+        #{loginUser,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPwd != null" >
+        #{loginPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="userNickname != null" >
+        #{userNickname,jdbcType=VARCHAR},
+      </if>
+      <if test="userRealname != null" >
+        #{userRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="userOriginal != null" >
+        #{userOriginal,jdbcType=VARCHAR},
+      </if>
+      <if test="userSex != null" >
+        #{userSex,jdbcType=CHAR},
+      </if>
+      <if test="nationalityId != null" >
+        #{nationalityId,jdbcType=VARCHAR},
+      </if>
+      <if test="userBirthday != null" >
+        #{userBirthday,jdbcType=VARCHAR},
+      </if>
+      <if test="idType != null" >
+        #{idType,jdbcType=CHAR},
+      </if>
+      <if test="idNumber != null" >
+        #{idNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null" >
+        #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="userQq != null" >
+        #{userQq,jdbcType=VARCHAR},
+      </if>
+      <if test="userWechat != null" >
+        #{userWechat,jdbcType=VARCHAR},
+      </if>
+      <if test="weibo != null" >
+        #{weibo,jdbcType=VARCHAR},
+      </if>
+      <if test="userPortrait != null" >
+        #{userPortrait,jdbcType=VARCHAR},
+      </if>
+      <if test="userLevel != null" >
+        #{userLevel,jdbcType=INTEGER},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=CHAR},
+      </if>
+      <if test="userEmail != null" >
+        #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userJob != null" >
+        #{userJob,jdbcType=VARCHAR},
+      </if>
+      <if test="userProvince != null" >
+        #{userProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="userCity != null" >
+        #{userCity,jdbcType=VARCHAR},
+      </if>
+      <if test="userDistrict != null" >
+        #{userDistrict,jdbcType=VARCHAR},
+      </if>
+      <if test="userAddr != null" >
+        #{userAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="userRemarks != null" >
+        #{userRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="userIntegral != null" >
+        #{userIntegral,jdbcType=REAL},
+      </if>
+      <if test="isActivate != null" >
+        #{isActivate,jdbcType=CHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=CHAR},
+      </if>
+      <if test="isAdmin != null" >
+        #{isAdmin,jdbcType=CHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=VARCHAR},
+      </if>
+      <if test="loginDate != null" >
+        #{loginDate,jdbcType=VARCHAR},
+      </if>
+      <if test="outDate != null" >
+        #{outDate,jdbcType=VARCHAR},
+      </if>
+      <if test="isOnline != null" >
+        #{isOnline,jdbcType=CHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="attributeOne != null" >
+        #{attributeOne,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeTwo != null" >
+        #{attributeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeThree != null" >
+        #{attributeThree,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 更新用户信息 -->
+  <update id="editUser" parameterType="pers.liujunyi.bookkeeping.entity.TCoreUser" >
+    update t_core_user
+    <set >
+      <if test="userCode != null" >
+        user_code = #{userCode,jdbcType=VARCHAR},
+      </if>
+      <if test="loginUser != null" >
+        login_user = #{loginUser,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPwd != null" >
+        login_pwd = #{loginPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="userNickname != null" >
+        user_nickname = #{userNickname,jdbcType=VARCHAR},
+      </if>
+      <if test="userRealname != null" >
+        user_realname = #{userRealname,jdbcType=VARCHAR},
+      </if>
+      <if test="userOriginal != null" >
+        user_original = #{userOriginal,jdbcType=VARCHAR},
+      </if>
+      <if test="userSex != null" >
+        user_sex = #{userSex,jdbcType=CHAR},
+      </if>
+      <if test="nationalityId != null" >
+        nationality_id = #{nationalityId,jdbcType=VARCHAR},
+      </if>
+      <if test="userBirthday != null" >
+        user_birthday = #{userBirthday,jdbcType=VARCHAR},
+      </if>
+      <if test="idType != null" >
+        id_type = #{idType,jdbcType=CHAR},
+      </if>
+      <if test="idNumber != null" >
+        id_number = #{idNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null" >
+        user_phone = #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="userQq != null" >
+        user_qq = #{userQq,jdbcType=VARCHAR},
+      </if>
+      <if test="userWechat != null" >
+        user_wechat = #{userWechat,jdbcType=VARCHAR},
+      </if>
+      <if test="weibo != null" >
+        weibo = #{weibo,jdbcType=VARCHAR},
+      </if>
+      <if test="userPortrait != null" >
+        user_portrait = #{userPortrait,jdbcType=VARCHAR},
+      </if>
+      <if test="userLevel != null" >
+        user_level = #{userLevel,jdbcType=INTEGER},
+      </if>
+      <if test="userType != null" >
+        user_type = #{userType,jdbcType=CHAR},
+      </if>
+      <if test="userEmail != null" >
+        user_email = #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userJob != null" >
+        user_job = #{userJob,jdbcType=VARCHAR},
+      </if>
+      <if test="userProvince != null" >
+        user_province = #{userProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="userCity != null" >
+        user_city = #{userCity,jdbcType=VARCHAR},
+      </if>
+      <if test="userDistrict != null" >
+        user_district = #{userDistrict,jdbcType=VARCHAR},
+      </if>
+      <if test="userAddr != null" >
+        user_addr = #{userAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="userRemarks != null" >
+        user_remarks = #{userRemarks,jdbcType=VARCHAR},
+      </if>
+      <if test="userIntegral != null" >
+        user_integral = #{userIntegral,jdbcType=REAL},
+      </if>
+      <if test="isActivate != null" >
+        is_activate = #{isActivate,jdbcType=CHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=CHAR},
+      </if>
+      <if test="isAdmin != null" >
+        is_admin = #{isAdmin,jdbcType=CHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=VARCHAR},
+      </if>
+      <if test="loginDate != null" >
+        login_date = #{loginDate,jdbcType=VARCHAR},
+      </if>
+      <if test="outDate != null" >
+        out_date = #{outDate,jdbcType=VARCHAR},
+      </if>
+      <if test="isOnline != null" >
+        is_online = #{isOnline,jdbcType=CHAR},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="attributeOne != null" >
+        attribute_one = #{attributeOne,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeTwo != null" >
+        attribute_two = #{attributeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeThree != null" >
+        attribute_three = #{attributeThree,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据 登录名、手机号、邮箱 查询用户主键ID -->
+  <select id="getSingleUserId" resultType="java.lang.String" parameterType="java.util.concurrent.ConcurrentMap">
+      select id from t_core_user
+      <where>
+         <if test="loginUser != null and loginUser != '' ">
+            login_user = #{loginUser,jdbcType=VARCHAR}
+         </if>
+         <if test="userEmail != null and userEmail != '' ">
+            user_email = #{userEmail,jdbcType=VARCHAR}
+         </if>
+         <if test="userPhone != null and userEmail != '' ">
+            user_phone = #{userPhone,jdbcType=VARCHAR}
+         </if>
+         <if test="idNumber != null and idNumber != '' ">
+            id_number = #{idNumber,jdbcType=VARCHAR}
+         </if>
+      </where>
+      and delete_flag = '1001'
+  </select>
+  
+  <!-- 根据登录名和登录密码查询用户信息 -->
+  <select id="getSingleUserInfo" resultType="CoreUser">
+     select id,user_code,is_activate from t_core_user  where
+     login_user = #{loginUser,jdbcType=VARCHAR} and 
+     login_pwd = #{loginPwd,jdbcType=VARCHAR} and
+     delete_flag = '1001'
+  </select>
+  
+</mapper>

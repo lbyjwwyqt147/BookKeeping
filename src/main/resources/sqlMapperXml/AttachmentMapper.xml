@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pers.liujunyi.bookkeeping.mapper.IAttachmentMapper">
+   
+  <!-- 返回用户list列表 -->  
+  <resultMap id="BaseResultMap" type="pers.liujunyi.bookkeeping.entity.TCoreAttachment" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+    <result column="attach_code" property="attachCode" jdbcType="VARCHAR" />
+    <result column="attach_parent" property="attachParent" jdbcType="VARCHAR" />
+    <result column="attach_level" property="attachLevel" jdbcType="INTEGER" />
+    <result column="item_id" property="itemId" jdbcType="VARCHAR" />
+    <result column="bid" property="bid" jdbcType="VARCHAR" />
+    <result column="attach_original_name" property="attachOriginalName" jdbcType="VARCHAR" />
+    <result column="attach_new_name" property="attachNewName" jdbcType="VARCHAR" />
+    <result column="attach_relative_paths" property="attachRelativePaths" jdbcType="VARCHAR" />
+    <result column="absolute_path" property="absolutePath" jdbcType="VARCHAR" />
+    <result column="absolute_folder_path" property="absoluteFolderPath" jdbcType="VARCHAR" />
+    <result column="attach_size" property="attachSize" jdbcType="REAL" />
+    <result column="attach_suffix" property="attachSuffix" jdbcType="CHAR" />
+    <result column="attach_type" property="attachType" jdbcType="CHAR" />
+    <result column="voice_url" property="voiceUrl" jdbcType="VARCHAR" />
+    <result column="voice_length" property="voiceLength" jdbcType="REAL" />
+    <result column="create_date" property="createDate" jdbcType="VARCHAR" />
+    <result column="attach_startus" property="attachStartus" jdbcType="CHAR" />
+    <result column="is_cover" property="isCover" jdbcType="CHAR" />
+    <result column="attribute_one" property="attributeOne" jdbcType="VARCHAR" />
+    <result column="attribute_two" property="attributeTwo" jdbcType="VARCHAR" />
+    <result column="attribute_three" property="attributeThree" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--  -->
+  <resultMap id="ResultMapWithBLOBs" type="pers.liujunyi.bookkeeping.entity.TCoreAttachment" extends="BaseResultMap" >
+    <result column="attach_data" property="attachData" jdbcType="LONGVARBINARY" />
+  </resultMap>
+  
+  <!-- 基础信息项 -->
+  <sql id="Base_Column_List" >
+    id, user_id, project_id, attach_code, attach_parent, attach_level, item_id, bid, 
+    attach_original_name, attach_new_name, attach_relative_paths, absolute_path, absolute_folder_path, 
+    attach_size, attach_suffix, attach_type, voice_url, voice_length, create_date, attach_startus, 
+    is_cover, attribute_one, attribute_two, attribute_three
+  </sql>
+  
+  <!-- 部分信息项 -->
+  <sql id="Part_Column_List" >
+    id, user_id, attach_code,
+    attach_original_name, attach_relative_paths, absolute_path,
+    attach_type, create_date, attach_startus, 
+    is_cover, attribute_one, attribute_two, attribute_three
+  </sql>
+   <!-- 插入单挑数据 -->
+   <insert id="addAttachment" parameterType="CoreAttachment" >
+    <!-- 生成主键的uuid -->
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">  
+        select  replace(uuid(),'-','')  from dual  
+    </selectKey>  
+    <!-- 插入数据sql-->
+    insert into t_core_attachment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="projectId != null" >
+        project_id,
+      </if>
+      <if test="attachCode != null" >
+        attach_code,
+      </if>
+      <if test="attachParent != null" >
+        attach_parent,
+      </if>
+      <if test="attachLevel != null" >
+        attach_level,
+      </if>
+      <if test="itemId != null" >
+        item_id,
+      </if>
+      <if test="bid != null" >
+        bid,
+      </if>
+      <if test="attachOriginalName != null" >
+        attach_original_name,
+      </if>
+      <if test="attachNewName != null" >
+        attach_new_name,
+      </if>
+      <if test="attachRelativePaths != null" >
+        attach_relative_paths,
+      </if>
+      <if test="absolutePath != null" >
+        absolute_path,
+      </if>
+      <if test="absoluteFolderPath != null" >
+        absolute_folder_path,
+      </if>
+      <if test="attachSize != null" >
+        attach_size,
+      </if>
+      <if test="attachSuffix != null" >
+        attach_suffix,
+      </if>
+      <if test="attachType != null" >
+        attach_type,
+      </if>
+      <if test="voiceUrl != null" >
+        voice_url,
+      </if>
+      <if test="voiceLength != null" >
+        voice_length,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="attachStartus != null" >
+        attach_startus,
+      </if>
+      <if test="isCover != null" >
+        is_cover,
+      </if>
+      <if test="attributeOne != null" >
+        attribute_one,
+      </if>
+      <if test="attributeTwo != null" >
+        attribute_two,
+      </if>
+      <if test="attributeThree != null" >
+        attribute_three,
+      </if>
+      <if test="attachData != null" >
+        attach_data,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectId != null" >
+        #{projectId,jdbcType=VARCHAR},
+      </if>
+      <if test="attachCode != null" >
+        #{attachCode,jdbcType=VARCHAR},
+      </if>
+      <if test="attachParent != null" >
+        #{attachParent,jdbcType=VARCHAR},
+      </if>
+      <if test="attachLevel != null" >
+        #{attachLevel,jdbcType=INTEGER},
+      </if>
+      <if test="itemId != null" >
+        #{itemId,jdbcType=VARCHAR},
+      </if>
+      <if test="bid != null" >
+        #{bid,jdbcType=VARCHAR},
+      </if>
+      <if test="attachOriginalName != null" >
+        #{attachOriginalName,jdbcType=VARCHAR},
+      </if>
+      <if test="attachNewName != null" >
+        #{attachNewName,jdbcType=VARCHAR},
+      </if>
+      <if test="attachRelativePaths != null" >
+        #{attachRelativePaths,jdbcType=VARCHAR},
+      </if>
+      <if test="absolutePath != null" >
+        #{absolutePath,jdbcType=VARCHAR},
+      </if>
+      <if test="absoluteFolderPath != null" >
+        #{absoluteFolderPath,jdbcType=VARCHAR},
+      </if>
+      <if test="attachSize != null" >
+        #{attachSize,jdbcType=REAL},
+      </if>
+      <if test="attachSuffix != null" >
+        #{attachSuffix,jdbcType=CHAR},
+      </if>
+      <if test="attachType != null" >
+        #{attachType,jdbcType=CHAR},
+      </if>
+      <if test="voiceUrl != null" >
+        #{voiceUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="voiceLength != null" >
+        #{voiceLength,jdbcType=REAL},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="attachStartus != null" >
+        #{attachStartus,jdbcType=CHAR},
+      </if>
+      <if test="isCover != null" >
+        #{isCover,jdbcType=CHAR},
+      </if>
+      <if test="attributeOne != null" >
+        #{attributeOne,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeTwo != null" >
+        #{attributeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeThree != null" >
+        #{attributeThree,jdbcType=VARCHAR},
+      </if>
+      <if test="attachData != null" >
+        #{attachData,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+
+  </insert>
+
+  <!-- 批量插入附件信息 -->
+  <insert id="addAttachmentList" parameterType="CoreAttachment" >
+  
+	   insert into t_core_attachment (id, user_id, project_id, 
+       attach_code, attach_parent, attach_level, 
+       item_id, bid, attach_original_name, 
+       attach_new_name, attach_relative_paths, absolute_path, 
+       absolute_folder_path, attach_size, attach_suffix, 
+       attach_type, voice_url, voice_length, 
+       create_date, attach_startus, is_cover, 
+       attribute_one, attribute_two, attribute_three, 
+       attach_data)
+       values
+	   <foreach collection="list" item="item" index="index" separator="," >  
+	      (#{item.id,jdbcType=VARCHAR}, #{item.userId,jdbcType=VARCHAR}, #{item.projectId,jdbcType=VARCHAR}, 
+	      #{item.attachCode,jdbcType=VARCHAR}, #{item.attachParent,jdbcType=VARCHAR}, #{item.attachLevel,jdbcType=INTEGER}, 
+	      #{item.itemId,jdbcType=VARCHAR}, #{item.bid,jdbcType=VARCHAR}, #{item.attachOriginalName,jdbcType=VARCHAR}, 
+	      #{item.attachNewName,jdbcType=VARCHAR}, #{item.attachRelativePaths,jdbcType=VARCHAR}, #{item.absolutePath,jdbcType=VARCHAR}, 
+	      #{item.absoluteFolderPath,jdbcType=VARCHAR}, #{item.attachSize,jdbcType=REAL}, #{item.attachSuffix,jdbcType=CHAR}, 
+	      #{item.attachType,jdbcType=CHAR}, #{item.voiceUrl,jdbcType=VARCHAR}, #{item.voiceLength,jdbcType=REAL}, 
+	      #{item.createDate,jdbcType=VARCHAR}, #{item.attachStartus,jdbcType=CHAR}, #{item.isCover,jdbcType=CHAR}, 
+	      #{item.attributeOne,jdbcType=VARCHAR}, #{item.attributeTwo,jdbcType=VARCHAR}, #{item.attributeThree,jdbcType=VARCHAR}, 
+	      #{item.attachData,jdbcType=LONGVARBINARY})
+	   </foreach>
+ </insert>
+ 
+
+ <!-- 查询附件全部字段集合 -->
+ <select id="findAttachmentAllList" resultMap="BaseResultMap">
+   
+   select 
+   <include refid="Base_Column_List"></include>
+   from t_core_attachment where 1 = 1
+   <if test="bid != null and bid != '' ">
+     and bid = #{bid,jdbcType=CHAR}
+   </if>
+   <if test="attachParent != null and attachParent != '' ">
+     and attach_parent = #{attachParent,jdbcType=VARCHAR}
+   </if>
+   <if test="userId != null and userId != '' ">
+     and user_id = #{userId,jdbcType=VARCHAR}
+   </if>
+   <if test="itemId != null and itemId != '' ">
+     and item_id = #{itemId,jdbcType=VARCHAR}
+   </if>
+   <if test="projectId != null and projectId != '' ">
+     and project_id = #{projectId,jdbcType=VARCHAR}
+   </if>
+   <if test="attachStartus != null and attachStartus != '' ">
+     and attach_startus = #{attachStartus,jdbcType=CHAR}
+   </if>
+   <if test="attachType != null and attachType != '' ">
+     and attach_type = #{attachType,jdbcType=CHAR}
+   </if>
+ </select>
+ 
+ 
+  <!-- 查询部分字段集合 -->
+ <select id="findAttachmentPortionList" resultMap="BaseResultMap">
+   
+   select 
+   <include refid="Part_Column_List"></include>
+   from t_core_attachment where 1 = 1
+   <if test="bid != null and bid != '' ">
+     and bid = #{bid,jdbcType=CHAR}
+   </if>
+   <if test="attachParent != null and attachParent != '' ">
+     and attach_parent = #{attachParent,jdbcType=VARCHAR}
+   </if>
+    <if test="userId != null and userId != '' ">
+     and user_id = #{userId,jdbcType=VARCHAR}
+   </if>
+   <if test="itemId != null and itemId != '' ">
+     and item_id = #{itemId,jdbcType=VARCHAR}
+   </if>
+   <if test="projectId != null and projectId != '' ">
+     and project_id = #{projectId,jdbcType=VARCHAR}
+   </if>
+   <if test="attachStartus != null and attachStartus != '' ">
+     and attach_startus = #{attachStartus,jdbcType=CHAR}
+   </if>
+   <if test="attachType != null and attachType != '' ">
+     and attach_type = #{attachType,jdbcType=CHAR}
+   </if>
+ </select>
+ 
+</mapper>

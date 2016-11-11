@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="pers.liujunyi.bookkeeping.mapper.ICoreDictionaryMapper" >
+  
+  <!-- 集合列表 -->
+  <resultMap id="BaseResultMap" type="pers.liujunyi.bookkeeping.entity.TCoreDictionary" >
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="dict_code" jdbcType="VARCHAR" property="dictCode" />
+    <result column="dict_word" jdbcType="VARCHAR" property="dictWord" />
+    <result column="dict_name" jdbcType="VARCHAR" property="dictName" />
+    <result column="dict_description" jdbcType="VARCHAR" property="dictDescription" />
+    <result column="parent_code" jdbcType="VARCHAR" property="parentCode" />
+    <result column="entity_name" jdbcType="VARCHAR" property="entityName" />
+    <result column="entity_field_name" jdbcType="VARCHAR" property="entityFieldName" />
+    <result column="dict_level" jdbcType="INTEGER" property="dictLevel" />
+    <result column="is_parent" jdbcType="CHAR" property="isParent" />
+    <result column="dict_prompt" jdbcType="VARCHAR" property="dictPrompt" />
+    <result column="is_activate" jdbcType="CHAR" property="isActivate" />
+    <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
+    <result column="update_time" jdbcType="VARCHAR" property="updateTime" />
+    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
+    <result column="attribute_one" jdbcType="VARCHAR" property="attributeOne" />
+    <result column="attribute_two" jdbcType="VARCHAR" property="attributeTwo" />
+    <result column="attribute_three" jdbcType="VARCHAR" property="attributeThree" />
+  </resultMap>
+  
+  <!-- 基础字段 -->
+  <sql id="Base_Column_List" >
+     id, dict_code, dict_word, dict_name, dict_description, parent_code, entity_name, 
+     entity_field_name, dict_level, is_parent, dict_prompt, is_activate, create_time, 
+     create_user, update_time, update_user, attribute_one, attribute_two, attribute_three
+  </sql>
+  
+  <!-- 根据父级编号查询下级字典信息集合 -->
+  <select id="findChlidsDictList" parameterType="java.lang.String" resultMap="BaseResultMap">
+      select 
+      <include refid="Base_Column_List"></include>
+      from t_core_dictionary where 1 = 1 
+      <if test="parentCode != null and parentCode != '' ">
+         and parent_code = #{parentCode,jdbcType=VARCHAR}
+      </if>
+      <if test="offset != null and limit != null ">
+        limit #{offset,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
+      </if>
+  </select>
+  
+  <!-- 获取纪录条数 -->
+  <select id="getInfoCount" resultType="java.lang.Long">
+     select count(id) from t_core_dictionary where 1 = 1  
+     <if test="parentCode != null and parentCode != '' ">
+          and parent_code = #{parentCode,jdbcType=VARCHAR}
+     </if>
+     <if test="parentCode == null">
+          limit 0,5
+     </if>
+     
+  </select>
+  
+  <!-- 根据字典编号获取字典详细信息 -->
+  <select id="getDictInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+      select 
+      <include refid="Base_Column_List"></include>
+      from t_core_dictionary where dict_code = #{dictCode,jdbcType=VARCHAR}
+   
+  </select>
+  
+  <!-- 根据主键ID获取字典详细信息 -->
+  <select id="getDictInfoAndId" parameterType="java.lang.String" resultMap="BaseResultMap">
+      select 
+      <include refid="Base_Column_List"></include>
+      from t_core_dictionary where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据字典父级编号查询下级最大编号值 -->
+  <select id="getMaxDictCodeValue" resultType="java.lang.String">
+      select max(dict_code) from t_core_dictionary where parent_code = #{parentCode,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据字典父级编号查询下级字典代码值 -->
+  <select id="getDictWordValue" resultType="java.lang.String">
+     select dict_word from t_core_dictionary where  parent_code = #{parentCode,jdbcType=VARCHAR} and dict_word = #{dictWrod,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据字典关联实体名称、字段名称、字典代码 获取字典名称 -->
+  <select id="getDictNameValue" resultType="java.lang.String">
+      select dict_name from t_core_dictionary 
+      <where>
+        <!--   entity_name = #{entityName,jdbcType=VARCHAR}
+          and
+          entity_field_name = #{entityFieldName,jdbcType=VARCHAR}
+          and  -->
+          dict_word = #{dictWord,jdbcType=VARCHAR}
+          and 
+          parent_code = #{parentCode,jdbcType=VARCHAR}
+          and 
+          is_activate = '1001'
+      </where>
+  </select>
+  
+  <!-- 根据编号获取字典名称 -->
+  <select id="getDictName" resultType="java.lang.String">
+     select dict_name from t_core_dictionary 
+      <where>
+          dict_Code = #{dictCode,jdbcType=VARCHAR}
+      </where>
+  </select>
+  
+  <!-- 查询全表中字典关联实体和字段是否存在 -->
+  <select id="getDictEntityAndFieldName" resultType="java.lang.String">
+      select dict_Code from t_core_dictionary where entity_name = #{entityName,jdbcType=VARCHAR} and entity_field_name = #{fieldName,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 更新字典状态 -->
+  <update id="updateDictState"  >
+    update t_core_dictionary set is_activate = #{stateValue,jdbcType=CHAR} where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 更新字典状态 -->
+  <update id="updateIsParent"  >
+    update t_core_dictionary set is_parent = #{stateValue,jdbcType=CHAR} where dict_code = #{parentCode,jdbcType=VARCHAR}
+  </update>
+  
+  
+  <!-- 删除字典 -->
+  <delete id="deleteDict" parameterType="java.lang.String" >
+    
+    delete from t_core_dictionary
+    where id in 
+    <foreach collection="array" item="item" open="(" separator="," close=")">
+      #{item,jdbcType=VARCHAR}
+    </foreach>
+  </delete>
+  
+  <!-- 新增字典信息 -->
+  <insert id="addDict" parameterType="pers.liujunyi.bookkeeping.entity.TCoreDictionary" >
+     <!-- 生成主键的uuid -->
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">  
+        select  replace(uuid(),'-','')  from dual  
+    </selectKey> 
+    
+    insert into t_core_dictionary
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="dictCode != null" >
+        dict_code,
+      </if>
+      <if test="dictWord != null" >
+        dict_word,
+      </if>
+      <if test="dictName != null" >
+        dict_name,
+      </if>
+      <if test="dictDescription != null" >
+        dict_description,
+      </if>
+      <if test="parentCode != null" >
+        parent_code,
+      </if>
+      <if test="entityName != null" >
+        entity_name,
+      </if>
+      <if test="entityFieldName != null" >
+        entity_field_name,
+      </if>
+      <if test="dictLevel != null" >
+        dict_level,
+      </if>
+      <if test="isActivate != null" >
+        is_activate,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="attributeOne != null" >
+        attribute_one,
+      </if>
+      <if test="attributeTwo != null" >
+        attribute_two,
+      </if>
+      <if test="attributeThree != null" >
+        attribute_three,
+      </if>
+      <if test="isParent != null">
+        is_parent,
+      </if>
+      <if test="dictPrompt != null">
+        dict_prompt,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="dictCode != null" >
+        #{dictCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dictWord != null" >
+        #{dictWord,jdbcType=VARCHAR},
+      </if>
+      <if test="dictName != null" >
+        #{dictName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictDescription != null" >
+        #{dictDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCode != null" >
+        #{parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="entityName != null" >
+        #{entityName,jdbcType=VARCHAR},
+      </if>
+      <if test="entityFieldName != null" >
+        #{entityFieldName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictLevel != null" >
+        #{dictLevel,jdbcType=INTEGER},
+      </if>
+      <if test="isActivate != null" >
+        #{isActivate,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeOne != null" >
+        #{attributeOne,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeTwo != null" >
+        #{attributeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeThree != null" >
+        #{attributeThree,jdbcType=VARCHAR},
+      </if>
+      <if test="isParent != null">
+        #{isParent,jdbcType=CHAR},
+      </if>
+      <if test="dictPrompt != null">
+        #{dictPrompt,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 修改字典信息 -->
+  <update id="editDict" parameterType="pers.liujunyi.bookkeeping.entity.TCoreDictionary" >
+    update t_core_dictionary
+    <set >
+      <if test="dictCode != null" >
+        dict_code = #{dictCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dictWord != null" >
+        dict_word = #{dictWord,jdbcType=VARCHAR},
+      </if>
+      <if test="dictName != null" >
+        dict_name = #{dictName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictDescription != null" >
+        dict_description = #{dictDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCode != null" >
+        parent_code = #{parentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="entityName != null" >
+        entity_name = #{entityName,jdbcType=VARCHAR},
+      </if>
+      <if test="entityFieldName != null" >
+        entity_field_name = #{entityFieldName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictLevel != null" >
+        dict_level = #{dictLevel,jdbcType=INTEGER},
+      </if>
+      <if test="isActivate != null" >
+        is_activate = #{isActivate,jdbcType=CHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeOne != null" >
+        attribute_one = #{attributeOne,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeTwo != null" >
+        attribute_two = #{attributeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeThree != null" >
+        attribute_three = #{attributeThree,jdbcType=VARCHAR},
+      </if>
+      <if test="isParent != null">
+       is_parent =  #{isParent,jdbcType=CHAR},
+      </if>
+      <if test="dictPrompt != null">
+       dict_prompt = #{dictPrompt,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+ 
+</mapper>

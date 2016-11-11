@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC   "-//mybatis.org//DTD Config 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>  
+    <!-- 实体类别名配置 -->  
+    <typeAliases>
+       <typeAlias type="pers.liujunyi.bookkeeping.entity.TCoreUser" alias="CoreUser"/>
+       <typeAlias type="pers.liujunyi.bookkeeping.entity.TCoreAttachment" alias="CoreAttachment"/>
+       <typeAlias type="pers.liujunyi.bookkeeping.entity.TCoreDictionary" alias="CoreDictionary"/>
+       
+    </typeAliases>
+    
+    <!-- mapper 文件路径配置 -->  
+    <mappers>  
+        <mapper resource="sqlMapperXml/UserMapper.xml" />  
+        <mapper resource="sqlMapperXml/AttachmentMapper.xml" />  
+        <mapper resource="sqlMapperXml/DictionaryMapper.xml" />  
+    </mappers>  
+</configuration>  
