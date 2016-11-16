@@ -97,7 +97,7 @@ public interface ICoreDictionaryService {
      * @param dictCode 字典编号
      * @return 返回字典名称
      */
-    public String getDictName(@Param("dictCode")String dictCode);
+    public String getDictName(String dictCode);
     
     /**
      * 根据主键ID获取字典详细信息
