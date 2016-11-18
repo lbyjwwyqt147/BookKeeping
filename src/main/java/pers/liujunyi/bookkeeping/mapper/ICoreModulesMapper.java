@@ -3,6 +3,8 @@ package pers.liujunyi.bookkeeping.mapper;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.ibatis.annotations.Param;
+
 import pers.liujunyi.bookkeeping.entity.TCoreModules;
 
 /***
@@ -57,5 +59,16 @@ public interface ICoreModulesMapper {
 	 */
 	public CopyOnWriteArrayList<TCoreModules> findModulesList(ConcurrentMap<String,Object> map);
 	
+	/**
+	 * 获取父级编号下的最大编号值
+	 * @param modulePid  父级编号
+	 * @return 返回最大编号值
+	 */
+	public String findMaxModulesCode(@Param("modulePid")String modulePid);
 	
+	/**
+	 * 获取表中纪录条数
+	 * @return
+	 */
+	public Long getModulesCount();
 }

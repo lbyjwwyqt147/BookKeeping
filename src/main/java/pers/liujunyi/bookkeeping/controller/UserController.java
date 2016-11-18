@@ -26,7 +26,7 @@ import pers.liujunyi.bookkeeping.util.ControllerUtil;
  * @author liujunyi
  */
 @Controller
-@RequestMapping("/tally/user")
+@RequestMapping("/bookkeeping/user")
 public class UserController {
 
 	@Autowired

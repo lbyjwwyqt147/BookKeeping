@@ -21,7 +21,7 @@ public interface IServiceUtil {
 	 * @param request
 	 * @return
 	 */
-	public String[] getMemberSession(HttpServletRequest request);
+	public String[] getUserSession(HttpServletRequest request);
 	
 	/**
 	 * 获取upload文件夹在工程中的路径 

@@ -40,9 +40,7 @@
       <if test="parentCode != null and parentCode != '' ">
          and parent_code = #{parentCode,jdbcType=VARCHAR}
       </if>
-      <if test="offset != null and limit != null ">
-        limit #{offset,jdbcType=INTEGER},#{limit,jdbcType=INTEGER}
-      </if>
+     
   </select>
   
   <!-- 获取纪录条数 -->

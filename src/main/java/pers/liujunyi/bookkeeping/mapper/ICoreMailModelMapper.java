@@ -36,10 +36,10 @@ public interface ICoreMailModelMapper {
 	
 	/**
 	 * 删除
-	 * @param id 主键id
+	 * @param ids 主键id
 	 * @return
 	 */
-	public int deleteMail(String id);
+	public int deleteMail(String[] ids);
 	
 	/**
 	 * 修改 isActivate    1001：激活     1002 失效

@@ -31,7 +31,7 @@ import pers.liujunyi.bookkeeping.util.ControllerUtil;
  * @author liujunyi
  */
 @Controller
-@RequestMapping("/tally/sender")
+@RequestMapping("/bookkeeping/sender")
 public class SenderController {
 
 	/**

@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author liujunyi
  */
 @Controller
-@RequestMapping("/tally/home")
+@RequestMapping("/bookkeeping/home")
 public class HomeController {
 
 	/**

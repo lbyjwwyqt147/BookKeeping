@@ -3,6 +3,12 @@ package pers.liujunyi.bookkeeping.service;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+
+
+
+
+import javax.servlet.http.HttpServletRequest;
+
 import pers.liujunyi.bookkeeping.entity.TCoreModules;
 
 /***
@@ -36,10 +42,11 @@ public interface ICoreModulesService {
 	 * 保存信息
 	 * @param modules
 	 * @param task    add:新增   edit：编辑
+	 * @param userId  当前登录人ID
 	 * @param strings
 	 * @return
 	 */
-	public String saveModulesInfo(TCoreModules modules,String task,String... strings);
+	public String saveModulesInfo(TCoreModules modules,String task,String userId,String... strings);
 	
 	/**
 	 * 删除资源模块
@@ -73,4 +80,31 @@ public interface ICoreModulesService {
 	 */
 	public CopyOnWriteArrayList<TCoreModules> findModulesList(ConcurrentMap<String,Object> map);
 	
+	/**
+	 * 获取父级编号下的最大编号值
+	 * @param modulePid  父级编号
+	 * @return 返回最大编号值
+	 */
+	public String findMaxModulesCode(String modulePid);
+	
+	/**
+	 * 生成业务字典树
+	 * @param modulePid 父级编号
+	 * @param paramsMap  ztree 所需要的参数
+	 * @return ztree需要的json数据
+	 */
+	public String zTreeJson(String modulePid,ConcurrentMap<String,Object> paramsMap,HttpServletRequest request,String str);
+	
+	/**
+     * 根据父级编号当前数据设置最新编号值
+     * @param modulePid 父级编号
+     * @return 返回最新编号值
+     */
+    public String getNewCodeValue(String modulePid);
+    
+    /**
+	 * 获取表中纪录条数
+	 * @return
+	 */
+	public Long getModulesCount();
 }

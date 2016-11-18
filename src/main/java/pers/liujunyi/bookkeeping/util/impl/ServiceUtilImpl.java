@@ -75,7 +75,7 @@ public class ServiceUtilImpl implements IServiceUtil {
 	}
 
 	@Override
-	public String[] getMemberSession(HttpServletRequest request) {
+	public String[] getUserSession(HttpServletRequest request) {
 		return (String[]) request.getSession().getAttribute(Constants.USER_SESSION);
 	}
 

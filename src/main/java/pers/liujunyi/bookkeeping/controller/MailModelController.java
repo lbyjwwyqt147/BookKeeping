@@ -9,16 +9,19 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.google.gson.Gson;
 
+import pers.liujunyi.bookkeeping.entity.PageBean;
 import pers.liujunyi.bookkeeping.entity.TCoreMailModel;
+import pers.liujunyi.bookkeeping.service.ICoreMailInfoService;
 import pers.liujunyi.bookkeeping.service.ICoreMailModelService;
 import pers.liujunyi.bookkeeping.util.Constants;
 import pers.liujunyi.bookkeeping.util.ControllerUtil;
@@ -38,13 +41,14 @@ import pers.liujunyi.bookkeeping.util.IServiceUtil;
  */
 @Controller
 @RequestMapping("/bookkeeping/mailModel")
-public class CoreMailModelController {
-
+public class MailModelController {
+    private static final Logger LOGGER = Logger.getLogger(MailModelController.class);
 	@Autowired
 	private ICoreMailModelService  mailModelService;
-	
 	@Autowired
 	private IServiceUtil serviceUtil;
+	@Autowired
+	private ICoreMailInfoService mailInfoService; 
 	
 	/**
 	 * 保存信息
@@ -55,14 +59,13 @@ public class CoreMailModelController {
 	 */
 	@RequestMapping(value="saveInfo",method=RequestMethod.POST)
 	public void saveInfo(TCoreMailModel mailModel,String task,HttpServletRequest request ,HttpServletResponse response){
-		  response.setHeader("Access-Control-Allow-Origin","*"); 
 		  ConcurrentMap<String, Object> resultMap = new ConcurrentHashMap<String, Object>();
 	      AtomicBoolean success = new AtomicBoolean(false);
-	      String message  = "保存信息失败.";
+	      String message  = Constants.SAVE_FAIL_MSG;
 	      try {
 	    	   AtomicInteger count =  new AtomicInteger(0);
 	    	   //获取当前登录信息
-	    	   String[] userArray =  serviceUtil.getMemberSession(request);
+	    	   String[] userArray =  serviceUtil.getUserSession(request);
 			   if(task.trim().equals(Constants.ADD)){
 				  //新增
 				  mailModel.setCreateDate(DateTimeUtil.getCurrentDateTime());
@@ -76,9 +79,10 @@ public class CoreMailModelController {
 			   }
 			   if(count.get() > 0){
 				   success.set(true);
-				   message = "保存信息成功.";
+				   message = Constants.SAVE_SUCCESS_MSG;
 			   }
 		  } catch (Exception e) {
+			    LOGGER.error("保存邮箱地址出现异常.");
 				e.printStackTrace();
 		  }
 	      resultMap.put("success", success);
@@ -94,21 +98,21 @@ public class CoreMailModelController {
 	 * @param request
 	 * @param response
 	 */
+	@SuppressWarnings("unused")
 	@RequestMapping(value="findMailModelList",method=RequestMethod.POST)
-	public void findMailModelList(HttpServletRequest request ,HttpServletResponse response){
+	public void findMailModelList(Integer pageNum,Integer limit, HttpServletRequest request ,HttpServletResponse response){
 		response.setHeader("Access-Control-Allow-Origin","*");
-		String resultJson = "{\"pageNum\":1,\"pageSize\":0,\"size\":0,\"total\":0}";
+		String resultJson = "{\"rows\":[],\"total\":0}";
 		try {
 			//获取参数
 			ConcurrentMap<String, Object> params = ControllerUtil.getFormData(request);
-			AtomicInteger pageNum  = new AtomicInteger(params.get("pageNum") != null && !params.get("pageNum").toString().trim().equals("") ? Integer.valueOf(params.get("pageNum").toString().trim()):1);
-			AtomicInteger limit  = new AtomicInteger(params.get("limit") != null && !params.get("limit").toString().trim().equals("") ? Integer.valueOf(params.get("limit").toString().trim()):10);
 			/** startPage(当前页码,每页显示的纪录条数) */
-			PageHelper.startPage(pageNum.get(),limit.get());
+			Page<?> page = PageHelper.startPage(pageNum,limit,true);
 			CopyOnWriteArrayList<TCoreMailModel> list = mailModelService.findMailModelsList(params);
-			PageInfo<TCoreMailModel> page =  new PageInfo<TCoreMailModel>(list, pageNum.get());
-			resultJson = new Gson().toJson(page);
+			PageBean<TCoreMailModel> pageList =  new PageBean<TCoreMailModel>(page.getResult(), pageNum);
+			resultJson = "{\"rows\":"+new Gson().toJson(pageList.getList())+",\"total\":"+pageList.getTotal()+"}";
 		} catch (Exception e) {
+			LOGGER.error("获取邮件地址列表信息出现异常.");
 			e.printStackTrace();
 		}
 		ControllerUtil.writeJsonJavaScript(response, resultJson);
@@ -124,14 +128,17 @@ public class CoreMailModelController {
 	public void delete(String id,HttpServletRequest request ,HttpServletResponse response){
 		ConcurrentMap<String, Object> resultMap = new ConcurrentHashMap<String, Object>();
 		AtomicBoolean success = new AtomicBoolean(false);
-		String message = "删除信息失败.";
+		String message = Constants.DELETE_FAIL_MSG;
 		try {
-			AtomicInteger count = new AtomicInteger(mailModelService.deleteMail(id));
+			String[] ids = id.split(",");
+			AtomicInteger count = new AtomicInteger(mailModelService.deleteMail(ids));
 			if(count.get() > 0){
+				mailInfoService.deletesEmailId(ids);
 				success.set(true);
-				message = "删除信息成功.";
+				message = Constants.DELETE_SUCCESS_MSG;
 			}
 		} catch (Exception e) {
+			LOGGER.error("删除邮件地址出现异常.");
 			e.printStackTrace();
 		}
 		resultMap.put("success", success);
@@ -149,14 +156,15 @@ public class CoreMailModelController {
 	public void updateIsActivate(String id,String status,HttpServletRequest request ,HttpServletResponse response){
 		ConcurrentMap<String, Object> resultMap = new ConcurrentHashMap<String, Object>();
 		AtomicBoolean success = new AtomicBoolean(false);
-		String message = "更新信息失败.";
+		String message = Constants.UPDATE_FAIL_MSG;
 		try {
 			AtomicInteger count = new AtomicInteger(mailModelService.updateIsActivate(id, status));
 			if(count.get() > 0){
 				success.set(true);
-				message = "更新信息成功.";
+				message = Constants.UPDATE_SUCCESS_MSG;
 			}
 		} catch (Exception e) {
+			LOGGER.error("更新邮件地址状态出现异常.");
 			e.printStackTrace();
 		}
 		resultMap.put("success", success);

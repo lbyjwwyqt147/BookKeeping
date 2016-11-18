@@ -15,6 +15,19 @@ public class Constants {
 
 	/* 表示新增数据 */
 	public static final String ADD = "add";
+	public static final String SAVE_SUCCESS_MSG = "保存数据成功.";
+	public static final String SAVE_FAIL_MSG = "保存数据失败.";
+	public static final String DELETE_FAIL_MSG = "删除数据失败.";
+	public static final String DELETE_SUCCESS_MSG = "删除数据成功.";
+	public static final String SELECT_SUCCESS_MSG = "查询数据成功.";
+	public static final String SELECT_FAIL_MSG = "查询数据失败.";
+	public static final String SELECT_NONE_MSG = "查询无数据.";
+	public static final String ACTIVE_FAIL_MSG = "激活数据失败.";
+	public static final String ACTIVE_SUCCESS_MSG = "激活数据成功.";
+	public static final String LOCK_FAIL_MSG = "锁定数据失败.";
+	public static final String LOCK_SUCCESS_MSG = "锁定数据成功.";
+	public static final String UPDATE_FAIL_MSG = "更新数据状态失败.";
+	public static final String UPDATE_SUCCESS_MSG = "更新数据状态成功.";
 	/* 表示编辑数据 */
 	public static final String EDIT = "edit";
 	/* 手机发送短信信息 */
@@ -37,4 +50,12 @@ public class Constants {
 	public static final String USER_SESSION = "user_session";
 	/* 系统接口访问IP地址 */
 	public static final String ITEM_FILE_IP = "http://192.168.0.132:8080/DurisdictionManage";
+	/* 删除状态  1001 未删除  */
+	public static final String DELETE_NONE_STATUS = "1001";
+	/* 删除状态  1002 已删除  */
+	public static final String DELETE_SUCCESS_STATUS = "1002";
+	/*  1001 激活状态  */
+	public static final String ACTIVE_STATUS = "1001";
+	/*  1002 锁定状态  */
+	public static final String LOCK_STATUS = "1002";
 }

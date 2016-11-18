@@ -73,6 +73,7 @@ public class PageBean<T> implements Serializable {
 
     public PageBean() {
     }
+    
 
     /**
      * 包装Page对象

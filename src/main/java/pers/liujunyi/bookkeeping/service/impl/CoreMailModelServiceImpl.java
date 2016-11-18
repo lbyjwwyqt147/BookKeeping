@@ -39,8 +39,8 @@ public class CoreMailModelServiceImpl implements ICoreMailModelService {
 	}
 
 	@Override
-	public int deleteMail(String id) {
-		return mailModelMapper.deleteMail(id);
+	public int deleteMail(String[] ids) {
+		return mailModelMapper.deleteMail(ids);
 	}
 
 	@Override

@@ -20,6 +20,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /***
  * 文件名称: ControllerUitl.java
@@ -205,4 +209,51 @@ public class ControllerUtil {
 		}
 		return resultMap;
 	}
+	
+	
+	/**
+	 * 将json转换数组
+	 * @param json  json
+	 * @param strings
+	 * @return
+	 */
+	public static JsonArray getJsonArray(String json,String...strings){
+		JsonArray result = new JsonArray();
+		try {
+			JsonParser parser = new JsonParser();
+			//通过JsonParser对象可以把json格式的字符串解析成一个JsonElement对象
+			JsonElement el = parser.parse(json);
+			if(el.isJsonArray()){
+			    result =  el.getAsJsonArray();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.error("将json转换数组出现异常.");
+		}
+		return result;
+	}
+	
+	
+	/**
+	 * 将json转换为object对象
+	 * @param json  json
+	 * @param strings
+	 * @return
+	 */
+	public static JsonObject getJsonObject(String json,String...strings){
+		JsonObject obj = null;
+		try {
+			JsonParser parser = new JsonParser();
+			//通过JsonParser对象可以把json格式的字符串解析成一个JsonElement对象
+			JsonElement el = parser.parse(json);
+			if(el.isJsonObject()){
+				obj =  el.getAsJsonObject();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.error("将json转换为object对象出现异常.");
+		}
+		return obj;
+	}
+	
 }

@@ -24,7 +24,7 @@ import pers.liujunyi.bookkeeping.util.ControllerUtil;
 import pers.liujunyi.bookkeeping.util.DateTimeUtil;
 
 @Controller
-@RequestMapping("/tally/attachment")
+@RequestMapping("/bookkeeping/attachment")
 public class AttachmentController {
 	
 	@Autowired

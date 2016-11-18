@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,39 +36,42 @@ import pers.liujunyi.bookkeeping.util.IServiceUtil;
 @Service
 public class CoreDictionaryServiceImpl implements ICoreDictionaryService {
 
+	private static final Logger LOGGER = Logger.getLogger(CoreDictionaryServiceImpl.class);
 	@Autowired
 	private ICoreDictionaryMapper dictMapper;
 	@Autowired
 	private IServiceUtil serviceUtil;
 	
 	@Override
-	public ConcurrentMap<String, Object> saveDictInfo(TCoreDictionary dict, String task) {
+	public String saveDictInfo(TCoreDictionary dict, String task,String userId) {
 		 ConcurrentMap<String, Object> map = new ConcurrentHashMap<String, Object>();
 		 //是否成功
 	     AtomicBoolean success = new AtomicBoolean(false);
-	     String mssage = "保存数据失败.";
+	     String mssage = Constants.SAVE_FAIL_MSG;
 	     int result = 0;
          try {
 	    	if(task.equals(Constants.ADD)){
-	    		dict.setCreateUser("aa");
+	    		dict.setCreateUser(userId);
 	    		dict.setDictCode(this.settingNewDictCodeValue(dict.getParentCode()));
 	    		dict.setCreateTime(DateTimeUtil.getCurrentDateTime());
 	        	result = dictMapper.addDict(dict);
 	        	//result = dictMapper.updateIsParent(dict.getParentCode(), "1");
-	        }else {
+	        }else if(task.equals(Constants.EDIT)) {
 	        	dict.setUpdateTime(DateTimeUtil.getCurrentDateTime());
+	        	dict.setUpdateUser(userId);
 	        	result = dictMapper.editDict(dict);;
 			}
 	    	if(result > 0){
         		success.set(true);
-        		mssage = "保存数据成功.";
+        		mssage = Constants.SAVE_SUCCESS_MSG;
         	}
 		 } catch (Exception e) {
+			LOGGER.error("保存业务字典信息出现异常.");
 			e.printStackTrace();
 		 }
 	     map.put("success", success.get());
          map.put("mssage", mssage);
-	     return map;
+	     return new Gson().toJson(map);
 	}
 
 	@Override
@@ -75,7 +79,7 @@ public class CoreDictionaryServiceImpl implements ICoreDictionaryService {
 		try {
 			StringBuffer ztreBuffer = new StringBuffer("[");
 			//获取所有下级信息
-			CopyOnWriteArrayList<TCoreDictionary> dictList = dictMapper.findChlidsDictList(parentCode,null,null);
+			CopyOnWriteArrayList<TCoreDictionary> dictList = dictMapper.findChlidsDictList(parentCode);
 			if(dictList != null && !dictList.isEmpty()){
 				int i = 0;
 				Iterator<?> iterator = dictList.iterator();
@@ -113,6 +117,7 @@ public class CoreDictionaryServiceImpl implements ICoreDictionaryService {
 			ztreBuffer.append("]");
 			return ztreBuffer.toString();
 		} catch (Exception e) {
+			LOGGER.error("封装字典树形结构数据出现异常.");
 			e.printStackTrace();
 			return null;
 		}
@@ -131,8 +136,8 @@ public class CoreDictionaryServiceImpl implements ICoreDictionaryService {
 
 	@Override
 	public CopyOnWriteArrayList<TCoreDictionary> findChlidsDictList(
-			String parentCode,Integer offset,Integer limit) {
-		return dictMapper.findChlidsDictList(parentCode,offset,limit);
+			String parentCode) {
+		return dictMapper.findChlidsDictList(parentCode);
 	}
 
 	@Override
@@ -191,6 +196,7 @@ public class CoreDictionaryServiceImpl implements ICoreDictionaryService {
 				result.set(dictMapper.updateDictState(idString, stateValue));
 			}
 		} catch (Exception e) {
+			LOGGER.error("更新业务字典状态出现异常.");
 			e.printStackTrace();
 		}
 		return result.get();
@@ -231,7 +237,7 @@ public class CoreDictionaryServiceImpl implements ICoreDictionaryService {
 				map.put("text", "- 请选择 -");
 				results.add(map);
 			}
-			CopyOnWriteArrayList<TCoreDictionary> list = dictMapper.findChlidsDictList(pid,null,null);
+			CopyOnWriteArrayList<TCoreDictionary> list = dictMapper.findChlidsDictList(pid);
 			if (list != null && list.size() > 0) {
 				for(TCoreDictionary dict : list){
 				    // 循环赋值
@@ -243,6 +249,7 @@ public class CoreDictionaryServiceImpl implements ICoreDictionaryService {
 			}
 			json = new Gson().toJson(results);
 		} catch (Exception e) {
+			LOGGER.error("获取业务字典下拉树出现异常.");
 			e.printStackTrace();
 		}
 		return json;

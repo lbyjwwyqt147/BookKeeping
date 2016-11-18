@@ -3,7 +3,6 @@ package pers.liujunyi.bookkeeping.service;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-
 import pers.liujunyi.bookkeeping.entity.TCoreMailModel;
 
 /***
@@ -36,10 +35,10 @@ public interface ICoreMailModelService {
 
 	/**
 	 * 删除
-	 * @param id 主键id
+	 * @param ids 主键id
 	 * @return
 	 */
-	public int deleteMail(String id);
+	public int deleteMail(String[] ids);
 	
 	/**
 	 * 修改 isActivate    

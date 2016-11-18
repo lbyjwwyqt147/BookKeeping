@@ -3,20 +3,7 @@ package pers.liujunyi.bookkeeping.service;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-
-
-
-
-
-
-
-
-
-
-
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.ibatis.annotations.Param;
 
 import pers.liujunyi.bookkeeping.entity.TCoreDictionary;
 
@@ -35,11 +22,12 @@ public interface ICoreDictionaryService {
 
 	/**
 	 * 保存字典信息
-	 * @param dict 对象
-	 * @param task  add：新增  edit：修改编辑
+	 * @param dict     对象
+	 * @param task     add：新增  edit：修改编辑
+	 * @param userId   当前登录人ID
 	 * @return
 	 */
-	public ConcurrentMap<String, Object> saveDictInfo(TCoreDictionary dict,String task);
+	public String saveDictInfo(TCoreDictionary dict,String task,String userId);
 	
 	/**
 	 * 生成业务字典树
@@ -68,7 +56,7 @@ public interface ICoreDictionaryService {
      * @param parentCode 父级编号
      * @return 返回父级的下级业务字典集合
      */
-    public CopyOnWriteArrayList<TCoreDictionary> findChlidsDictList(String parentCode,Integer offset,Integer limit);
+    public CopyOnWriteArrayList<TCoreDictionary> findChlidsDictList(String parentCode);
     
     /**
      * 获取下拉框需要的json数据

@@ -35,11 +35,18 @@ public interface ICoreMailInfoMapper {
 	public int editMailInfo(TCoreMailInfo mailInfo);
 	
 	/**
-	 * 删除
+	 * 根据主键删除信息
 	 * @param ids 主键id
 	 * @return
 	 */
 	public int deletes(String[] ids);
+	
+	/**
+	 * 根据emailId删除信息
+	 * @param emailIds 邮件地址id
+	 * @return
+	 */
+	public int deletesEmailId(String[] emailIds);
 	
 	/**
 	 * 更新 isActivate

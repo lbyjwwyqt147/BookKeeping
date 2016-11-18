@@ -72,4 +72,9 @@ public class CoreMailInfoServiceImpl implements ICoreMailInfoService {
 		return mailInfo;
 	}
 
+	@Override
+	public int deletesEmailId(String[] emailIds) {
+		return mailInfoMapper.deletesEmailId(emailIds);
+	}
+
 }

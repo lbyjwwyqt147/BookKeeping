@@ -1,6 +1,7 @@
 package pers.liujunyi.bookkeeping.controller;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -15,17 +16,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import pers.liujunyi.bookkeeping.entity.PageBean;
 import pers.liujunyi.bookkeeping.entity.TCoreDictionary;
 import pers.liujunyi.bookkeeping.service.ICoreDictionaryService;
 import pers.liujunyi.bookkeeping.util.Constants;
 import pers.liujunyi.bookkeeping.util.ControllerUtil;
 import pers.liujunyi.bookkeeping.util.DateTimeUtil;
+import pers.liujunyi.bookkeeping.util.IServiceUtil;
 
 /***
  * 文件名称: CoreDictionaryController.java
@@ -39,11 +44,13 @@ import pers.liujunyi.bookkeeping.util.DateTimeUtil;
  * @author liujunyi
  */
 @Controller
-@RequestMapping("/tally/dict")
+@RequestMapping("/bookkeeping/dict")
 public class DictionaryController {
 	
 	@Autowired
 	private ICoreDictionaryService dictService;
+	@Autowired
+	private IServiceUtil serviceUtil;
 	
 	/**
 	 * 初始化列表页面
@@ -53,7 +60,6 @@ public class DictionaryController {
 	 */
 	@RequestMapping(value="initList")
 	public ModelAndView initList(HttpServletRequest request,HttpServletResponse response){
-		response.setHeader("Access-Control-Allow-Origin","*");
 		Long count =  dictService.getInfoCount(null);
 		if(count != null && count == 0){
 			//初始化默认数据
@@ -85,13 +91,9 @@ public class DictionaryController {
 	 */
 	@RequestMapping(value="saveInfo")
 	public void saveDictInfo(TCoreDictionary dict, String task,HttpServletRequest request,HttpServletResponse response){
-		response.setHeader("Access-Control-Allow-Origin","*");
-		try {
-			ConcurrentMap<String, Object> resultMap =  dictService.saveDictInfo(dict, task.trim());
-			ControllerUtil.writeJavaScript(response, resultMap);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	    String[] userArray = serviceUtil.getUserSession(request);
+	    String resultJson = dictService.saveDictInfo(dict, task, userArray[0]);
+	    ControllerUtil.writeJsonJavaScript(response, resultJson);
 	}
 	
 	/**
@@ -104,7 +106,6 @@ public class DictionaryController {
 	@RequestMapping(value="checkDictWord")
 	@ResponseBody
 	public boolean checkDictWord(String parentCode,String dictWord,String oldDictWord,HttpServletRequest request,HttpServletResponse response){
-		response.setHeader("Access-Control-Allow-Origin","*");
 		AtomicBoolean success =  new AtomicBoolean(false);
 		try {
 			String temp = null;
@@ -132,7 +133,6 @@ public class DictionaryController {
 	@RequestMapping(value="checkDictEntityAndFieldName")
 	@ResponseBody
 	public boolean checkDictEntityAndFieldName(String entityName,String fieldName,String oldEntityName,String oldFieldName,HttpServletRequest request,HttpServletResponse response){
-		response.setHeader("Access-Control-Allow-Origin","*");
 		AtomicBoolean success =  new AtomicBoolean(false);
 		try {
 			String temp = null;
@@ -158,16 +158,15 @@ public class DictionaryController {
 	 */
 	@RequestMapping(value="deleteDicts")
 	public void deleteDicts(String id,HttpServletRequest request,HttpServletResponse response){
-		response.setHeader("Access-Control-Allow-Origin","*");
 		ConcurrentMap<String, Object> resultMap =  new ConcurrentHashMap<String, Object>();
 		AtomicBoolean success = new AtomicBoolean(false);
-		String message = "删除数据失败.";
+		String message = Constants.DELETE_FAIL_MSG;
 		try {
 			String[] ids = id.split(",");
 			int result = dictService.deleteDict(ids);
 			if(result > 0){
 				success.set(true);
-				message = "删除数据成功.";
+				message = Constants.SAVE_SUCCESS_MSG;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -186,15 +185,14 @@ public class DictionaryController {
 	 */
 	@RequestMapping(value="updateDictState")
 	public void updateDictState(String id,String stateValue,HttpServletRequest request,HttpServletResponse response){
-		response.setHeader("Access-Control-Allow-Origin","*");
 		ConcurrentMap<String, Object> resultMap =  new ConcurrentHashMap<String, Object>();
 		AtomicBoolean success = new AtomicBoolean(false);
-		String message = stateValue.trim().equals("1002")?"锁定数据失败.":"激活数据失败.";
+		String message = Constants.UPDATE_FAIL_MSG;
 		try {
 			int result = dictService.updateActivateState(id,stateValue.trim());
 			if(result > 0){
 				success.set(true);
-				message = stateValue.trim().equals("1002")?"锁定数据成功.":"激活数据成功.";
+				message = Constants.UPDATE_SUCCESS_MSG;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -212,16 +210,19 @@ public class DictionaryController {
 	 */
 	@RequestMapping(value="getDictInfo")
 	public void getDictInfo(String dictCode,HttpServletRequest request,HttpServletResponse response){
-		response.setHeader("Access-Control-Allow-Origin","*");
 		ConcurrentMap<String, Object> resultMap =  new ConcurrentHashMap<String, Object>();
 		AtomicBoolean success = new AtomicBoolean(false);
-		String message = "获取数据失败.";
+		String message = Constants.SELECT_FAIL_MSG;
 		try {
 			TCoreDictionary dictionary = dictService.getDictInfo(dictCode);
 			if(dictionary != null){
-				message = "获取数据成功.";
-				resultMap.put("data", new Gson().toJson(dictionary));
+				success.set(true);
+				message = Constants.SELECT_SUCCESS_MSG;
+			}else{
+				success.set(true);
+				message = Constants.SELECT_NONE_MSG;
 			}
+			resultMap.put("data", new Gson().toJson(dictionary));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -238,16 +239,19 @@ public class DictionaryController {
 	 */
 	@RequestMapping(value="getDictInfoAndId")
 	public void getDictInfoAndId(String id,HttpServletRequest request,HttpServletResponse response){
-		response.setHeader("Access-Control-Allow-Origin","*");
 		ConcurrentMap<String, Object> resultMap =  new ConcurrentHashMap<String, Object>();
 		AtomicBoolean success = new AtomicBoolean(false);
-		String message = "获取数据失败.";
+		String message = Constants.SELECT_FAIL_MSG;
 		try {
 			TCoreDictionary dictionary = dictService.getDictInfoAndId(id);
 			if(dictionary != null){
-				message = "获取数据成功.";
-				resultMap.put("data", new Gson().toJson(dictionary));
+				success.set(true);
+				message = Constants.SELECT_SUCCESS_MSG;
+			}else{
+				success.set(true);
+				message = Constants.SELECT_NONE_MSG;
 			}
+			resultMap.put("data", new Gson().toJson(dictionary));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -258,28 +262,27 @@ public class DictionaryController {
 	
 	/**
 	 * 字典集合列表
-	 * @param pid     父级编号
+	 * @param pid         父级编号
+	 * @param pageNum     页码
+	 * @param limit       每页显示纪录条数
 	 * @param request
 	 * @param response
 	 */
+	@SuppressWarnings("unused")
 	@RequestMapping(value="dictList")
-    public void dictList(String pid,HttpServletRequest request,HttpServletResponse response){
-		response.setHeader("Access-Control-Allow-Origin","*");
-		String resultString = "{\"rows\":[],\"total\":1}";
+    public void dictList(String pid,Integer pageNum,Integer limit,HttpServletRequest request,HttpServletResponse response){
+		String resultString = "{\"rows\":[],\"total\":0}";
 		CopyOnWriteArrayList<ConcurrentMap<String, Object>> resultList =  new CopyOnWriteArrayList<ConcurrentMap<String, Object>>();
 		try {
-			ConcurrentMap<String, Object> params = ControllerUtil.getFormData(request);
-			//每页显示纪录条数
-			Integer limit = Integer.valueOf(params.get("pageSize") != null ? params.get("pageSize").toString().trim() : "10");
-			//页码
-			Integer offset = Integer.valueOf(params.get("pageNumber") != null ? params.get("pageNumber").toString().trim() : "1");
-			String[] strings = null;
-			CopyOnWriteArrayList<TCoreDictionary> list = dictService.findChlidsDictList(pid,offset,limit);
-    		if(list != null && !list.isEmpty()){
-    			Iterator<?> iterator = list.iterator();
+			Page<?> page = PageHelper.startPage(pageNum, limit, true);
+			CopyOnWriteArrayList<TCoreDictionary> list = dictService.findChlidsDictList(pid);
+			PageBean<TCoreDictionary> pageList = new PageBean<TCoreDictionary>(page.getResult(), pageNum);
+			List<?> dictList = pageList.getList();
+    		if(dictList != null && !dictList.isEmpty()){
+    			Iterator<?> iterator = dictList.iterator();
     			while(iterator.hasNext()){
     				TCoreDictionary dictionary = (TCoreDictionary) iterator.next();
-    				ConcurrentMap<String, Object> map = ControllerUtil.objectToMap(dictionary, strings);
+    				ConcurrentMap<String, Object> map = ControllerUtil.objectToMap(dictionary, "");
     				//父级名称
     				String parentText =  dictService.getDictName(dictionary.getDictCode()); 
     				map.put("parentText", parentText);
@@ -288,10 +291,7 @@ public class DictionaryController {
     				resultList.add(map);
     			}
     		}
-			//计算总纪录数
-    		params.put("parentCode", pid);
-    		Long totalLong =  dictService.getInfoCount(params);
-    		resultString = "{\"total\":"+totalLong+",\"rows\":"+new Gson().toJson(resultList)+"}";
+    		resultString = "{\"total\":"+pageList.getTotal()+",\"rows\":"+new Gson().toJson(resultList)+"}";
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -305,13 +305,13 @@ public class DictionaryController {
 	 */
 	@RequestMapping(value="dictTree")
 	public void dictTree(HttpServletRequest request,HttpServletResponse response){
-		response.setHeader("Access-Control-Allow-Origin","*");
 		try {
 			//获取参数
 			ConcurrentMap<String, Object> params =  ControllerUtil.getFormData(request);
 			//节点编号
 			String nid = params.get("nid").toString();
 			String ztreeJson = dictService.zTreeJson(nid, params, request, null);
+			//如果是第一级
 			if(nid.trim().equals("0")){
 				JsonArray allTree = this.zTreeList(ztreeJson,request,"");
 				ControllerUtil.writeJsonJavaScript(response, allTree.toString());
@@ -361,6 +361,7 @@ public class DictionaryController {
 	 * @param response
 	 */
 	public void dictComboxList(String entityName,String fieldName,String isEmpty,HttpServletRequest request,HttpServletResponse response){
+		response.setHeader("Access-Control-Allow-Origin","*");
 		try {
 			ControllerUtil.writeJsonJavaScript(response, dictService.dictChlidsJson(entityName, fieldName, isEmpty));
 		} catch (Exception e) {

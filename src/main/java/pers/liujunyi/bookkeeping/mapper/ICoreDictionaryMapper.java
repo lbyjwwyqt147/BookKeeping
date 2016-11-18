@@ -39,7 +39,7 @@ public interface ICoreDictionaryMapper {
      * @param parentCode 父级编号
      * @return 返回父级的下级业务字典集合
      */
-    public CopyOnWriteArrayList<TCoreDictionary> findChlidsDictList(@Param("parentCode")String parentCode,@Param("offset")Integer offset,@Param("limit")Integer limit);
+    public CopyOnWriteArrayList<TCoreDictionary> findChlidsDictList(@Param("parentCode")String parentCode);
     
     
     /**
