@@ -1,15 +1,13 @@
-package pers.liujunyi.bookkeeping.mapper;
+package pers.liujunyi.bookkeeping.service;
 
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.ibatis.annotations.Param;
-
 import pers.liujunyi.bookkeeping.entity.TCoreFunction;
 
 /***
- * 文件名称: ICoreFunctionMapper.java
- * 文件描述: 功能dao接口
+ * 文件名称: ICoreFunctionService.java
+ * 文件描述: 功能service接口
  * 公 司: 
  * 内容摘要: 
  * 其他说明:
@@ -18,8 +16,7 @@ import pers.liujunyi.bookkeeping.entity.TCoreFunction;
  * @version 1.0
  * @author liujunyi
  */
-public interface ICoreFunctionMapper {
-
+public interface ICoreFunctionService {
 	/**
 	 * 新增
 	 * @param function
@@ -33,6 +30,16 @@ public interface ICoreFunctionMapper {
 	 * @return
 	 */
 	public int editFunction(TCoreFunction function);
+	
+	/**
+	 * 保存信息
+	 * @param function
+	 * @param task
+	 * @param userId
+	 * @param strings
+	 * @return
+	 */
+	public String saveInfo(TCoreFunction function,String task,String userId,String...strings);
 	
 	/**
 	 * 更新状态
@@ -51,17 +58,24 @@ public interface ICoreFunctionMapper {
 	public int deletes(String[] ids);
 	
 	/**
+	 * 删除同时删除关联
+	 * @param ids  主键
+	 * @return
+	 */
+	public String deletesAndRelevance(String[] ids);
+	
+	/**
 	 * 查询数据列表
 	 * @param params
 	 * @return
 	 */
 	public CopyOnWriteArrayList<TCoreFunction> findFunsList(ConcurrentMap<String,Object> params);
-	
+
 	/**
 	 * 根据ID或者代码值查询
-	 * @param id   主键
-	 * @param code 代码值
+	 * @param id
+	 * @param code
 	 * @return
 	 */
-	public TCoreFunction findFunction(@Param("id")String id,@Param("code")String code);
+	public TCoreFunction findFunction(String id,String code);
 }
