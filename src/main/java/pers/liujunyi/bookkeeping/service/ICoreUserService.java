@@ -1,12 +1,9 @@
 package pers.liujunyi.bookkeeping.service;
 
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-
-
-
-
-import java.util.concurrent.atomic.AtomicReference;
+import javax.servlet.http.HttpServletRequest;
 
 import pers.liujunyi.bookkeeping.entity.TCoreUser;
 
@@ -83,7 +80,7 @@ public interface ICoreUserService {
 	 * @param securityCode  验证码
 	 * @return 返回登录信息json
 	 */
-	public String findUserLogin(AtomicReference<String> loginUser,AtomicReference<String> loginPwd,AtomicReference<String> securityCode);
+	public String findUserLogin(String loginUser,String loginPwd,String securityCode,HttpServletRequest request);
 	
 	/**
 	 * 保存用户信息
@@ -114,5 +111,48 @@ public interface ICoreUserService {
 	 */
 	public String getSingleUserId(ConcurrentMap<String,Object> map);
 	
+	/**
+	 * 查询用户列表
+	 * @param    userCode  用户编号
+	 * @param    loginUser 帐号
+	 * @param    userNickname  昵称
+	 * @param    idNumber     证件号码
+	 * @param    userPhone    手机号码
+	 * @param    userEmail    邮箱
+	 * @param    isActivate   是否激活
+	 * @param    userType     类型
+	 * @param map
+	 * @return
+	 */
+	public CopyOnWriteArrayList<TCoreUser> findArrayList(ConcurrentMap<String,Object> map);
 	
+	/**
+	 * 更新状态
+	 * @param   ids  主键
+	 * @param   isActivate   1001:激活   1002：锁定
+	 * @param map
+	 * @return
+	 */
+	public int updateStatus(ConcurrentMap<String,Object> map);
+	
+	/**
+	 * 根据ID真删除
+	 * @param ids
+	 * @return
+	 */
+	public int deletes(String[] ids);
+	
+	/**
+	 * 删除同时删除关联数据
+	 * @param ids
+	 * @return
+	 */
+	public String deletesAndRelevance(String[] ids);
+	
+	/**
+	 * 根据ID逻辑删除
+	 * @param ids
+	 * @return
+	 */
+	public int deletesFlag(String[] ids);
 }

@@ -14,7 +14,10 @@ import com.google.gson.Gson;
 
 import pers.liujunyi.bookkeeping.entity.TCoreRole;
 import pers.liujunyi.bookkeeping.mapper.ICoreRoleMapper;
+import pers.liujunyi.bookkeeping.service.ICoreRoleFunctionService;
+import pers.liujunyi.bookkeeping.service.ICoreRoleModuleService;
 import pers.liujunyi.bookkeeping.service.ICoreRoleService;
+import pers.liujunyi.bookkeeping.service.ICoreUserRoleService;
 import pers.liujunyi.bookkeeping.util.Constants;
 import pers.liujunyi.bookkeeping.util.DateTimeUtil;
 import pers.liujunyi.bookkeeping.util.IServiceUtil;
@@ -38,6 +41,12 @@ public class CoreRoleServiceImpl implements ICoreRoleService {
 	private ICoreRoleMapper roleMapper;
 	@Autowired
 	private IServiceUtil serviceUtil;
+	@Autowired
+	private ICoreRoleFunctionService  roleFunctionService;
+	@Autowired
+	private ICoreRoleModuleService roleModuleService; 
+	@Autowired
+	private ICoreUserRoleService   userRoleService;
 	
 	@Override
 	public int addRole(TCoreRole role) {
@@ -57,10 +66,15 @@ public class CoreRoleServiceImpl implements ICoreRoleService {
 		try {
 			AtomicInteger count = new AtomicInteger(0);
 			if(task != null && task.trim().equals(Constants.ADD)){
-				role.setCreateDate(DateTimeUtil.getCurrentDateTime());
-				role.setCreateUser(userId);
-				role.setDeleteFlag(Constants.DELETE_NONE_STATUS);
-				count.set(roleMapper.addRole(role));
+				TCoreRole checkRole = roleMapper.findRoleInfo("", role.getRoleCode());
+				if(checkRole != null){
+					message = Constants.SAVE_CODE_MSG;
+				}else{
+					role.setCreateDate(DateTimeUtil.getCurrentDateTime());
+					role.setCreateUser(userId);
+					role.setDeleteFlag(Constants.DELETE_NONE_STATUS);
+					count.set(roleMapper.addRole(role));
+				}
 			}else if(task != null && task.trim().equals(Constants.EDIT)){
 				role.setUpdateDate(DateTimeUtil.getCurrentDateTime());
 				role.setUpdateUser(userId);
@@ -95,7 +109,14 @@ public class CoreRoleServiceImpl implements ICoreRoleService {
 		AtomicBoolean success = new AtomicBoolean(false);
 		String message = Constants.DELETE_FAIL_MSG;
 		try {
+			//删除自身数据
 			AtomicInteger count = new AtomicInteger(roleMapper.deletesCodes(codes));
+			//删除关联数据(关联表:t_core_role_function)
+			roleFunctionService.deletesRoleCode(codes);
+			//删除关联数据(关联表:t_core_role_module)
+			roleModuleService.deletesRoleCode(codes);
+			//删除关联数据(关联表：t_core_user_role)
+			userRoleService.deleteRoleCode(codes);
 			if(count.get() > 0){
 				success.set(true);
 				message = Constants.DELETE_SUCCESS_MSG;

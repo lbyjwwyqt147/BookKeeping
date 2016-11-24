@@ -125,11 +125,11 @@ public class AttachmentController {
             		voiceUrl  =  (String) iterator.next();
             	}
             	//修改数据
-            	int count = attachmentService.updateAttachmentVoiceUrl(imageId, voiceUrl,voiceLength);
+            	/*int count = attachmentService.updateAttachmentVoiceUrl(imageId, voiceUrl,voiceLength);
             	if(count > 0){
             		messageString = "上传语音文件成功.";
             		success.set(true);
-            	}
+            	}*/
             }
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -76,6 +76,6 @@ public class TestUserController {
     	//设置参数
     	request.setParameter("login_user", loginUser);
     	request.setParameter("login_pwd", loginPwd);
-    	userController.userLogin(request, response);
+    	//userController.userLogin(request, response);
     }
 }

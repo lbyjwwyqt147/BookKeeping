@@ -1,0 +1,26 @@
+table.dataTable.no-footer{
+	border-bottom: 1px solid #e7ecf1
+}
+
+body.body-white{
+    background-color: white !important;	
+}
+
+div.row-margin-top{
+	margin-top: 10px !important;
+}
+
+div.dataTables_wrapper div.dataTables_paginate{
+    float: right !important;
+}
+
+div.dataTables_wrapper div.dataTables_info {
+    padding-top: 8px !important;
+    white-space: nowrap;
+}
+
+.bs-checkbox{
+	
+    vertical-align: middle;
+	
+}

@@ -33,11 +33,25 @@ public interface ICoreRoleFunctionMapper {
 	public int deletesIds(String[] ids);
 	
 	/**
-	 * 根据角色Id删除
+	 * 根据角色代码值删除
+	 * @param roleCodes
+	 * @return
+	 */
+	public int deletesRoleCode(String[] roleCodes);
+	
+	/**
+	 * 根据角色Id值删除
 	 * @param roleIds
 	 * @return
 	 */
 	public int deletesRoleId(String[] roleIds);
+	
+	/**
+	 * 根据功能id值删除
+	 * @param functionIds
+	 * @return
+	 */
+	public int deletesFunctionId(String[] functionIds);
 	
 	/**
 	 * 查询列表

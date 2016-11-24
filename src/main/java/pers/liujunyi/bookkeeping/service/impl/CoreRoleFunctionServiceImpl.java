@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
@@ -26,6 +27,7 @@ import pers.liujunyi.bookkeeping.util.Constants;
  * @version 1.0
  * @author liujunyi
  */
+@Service
 public class CoreRoleFunctionServiceImpl implements ICoreRoleFunctionService {
 
 	@Autowired
@@ -73,14 +75,24 @@ public class CoreRoleFunctionServiceImpl implements ICoreRoleFunctionService {
 	}
 
 	@Override
-	public int deletesRoleId(String[] roleIds) {
-		return roleFunctionMapper.deletesRoleId(roleIds);
+	public int deletesRoleCode(String[] roleCodes) {
+		return roleFunctionMapper.deletesRoleCode(roleCodes);
 	}
 
 	@Override
 	public CopyOnWriteArrayList<TCoreRoleFunction> findList(
 			ConcurrentMap<String, Object> map) {
 		return roleFunctionMapper.findList(map);
+	}
+
+	@Override
+	public int deletesFunctionId(String[] functionIds) {
+		return roleFunctionMapper.deletesFunctionId(functionIds);
+	}
+
+	@Override
+	public int deletesRoleId(String[] roleIds) {
+		return roleFunctionMapper.deletesRoleId(roleIds);
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 
 
+
 import javax.servlet.http.HttpServletRequest;
 
 import pers.liujunyi.bookkeeping.entity.TCoreModules;
@@ -56,11 +57,18 @@ public interface ICoreModulesService {
 	public int deletes(String[] ids);
 	
 	/**
-	 * 删除资源模块同时删除关联表中数据
-	 * @param ids
+	 * 根据模块代码删除
+	 * @param moduleCoes
 	 * @return
 	 */
-	public String deletesAndRelevance(String[] ids);
+	public int deletesAndModuleCodes(String[] moduleCoes);
+	
+	/**
+	 * 删除资源模块同时删除关联表中数据
+	 * @param moduleCoes  模块编号
+	 * @return
+	 */
+	public String deletesAndRelevance(String[] moduleCoes);
 	
 	/**
 	 * 更新模块状态

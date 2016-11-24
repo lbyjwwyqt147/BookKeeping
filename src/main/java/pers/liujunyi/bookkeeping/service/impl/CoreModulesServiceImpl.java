@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import pers.liujunyi.bookkeeping.entity.TCoreModules;
 import pers.liujunyi.bookkeeping.mapper.ICoreModulesMapper;
 import pers.liujunyi.bookkeeping.service.ICoreModulesService;
+import pers.liujunyi.bookkeeping.service.ICoreRoleModuleService;
 import pers.liujunyi.bookkeeping.util.Constants;
 import pers.liujunyi.bookkeeping.util.DateTimeUtil;
 import pers.liujunyi.bookkeeping.util.IServiceUtil;
@@ -42,6 +43,8 @@ public class CoreModulesServiceImpl implements ICoreModulesService {
 	private ICoreModulesMapper modulesMapper;
 	@Autowired
 	private IServiceUtil serviceUtil;
+	@Autowired
+	private ICoreRoleModuleService roleModuleService; 
 	
 	@Override
 	public int addModules(TCoreModules modules) {
@@ -90,12 +93,13 @@ public class CoreModulesServiceImpl implements ICoreModulesService {
 	}
 
 	@Override
-	public String deletesAndRelevance(String[] ids) {
+	public String deletesAndRelevance(String[] moduleCodes) {
 		ConcurrentMap<String, Object> resultMap = new ConcurrentHashMap<String, Object>();
 		AtomicBoolean success = new AtomicBoolean(false);
 		String message = Constants.DELETE_FAIL_MSG;
 		try {
-			AtomicInteger count = new AtomicInteger(modulesMapper.deletes(ids));
+			AtomicInteger count = new AtomicInteger(modulesMapper.deletesAndModuleCodes(moduleCodes));
+			roleModuleService.deletesModuleCode(moduleCodes);
 			if(count.get() > 0){
 				success.set(true);
 				message = Constants.DELETE_SUCCESS_MSG;
@@ -190,6 +194,11 @@ public class CoreModulesServiceImpl implements ICoreModulesService {
 	@Override
 	public Long getModulesCount() {
 		return modulesMapper.getModulesCount();
+	}
+
+	@Override
+	public int deletesAndModuleCodes(String[] moduleCoes) {
+		return modulesMapper.deletesAndModuleCodes(moduleCoes);
 	}
 
 }

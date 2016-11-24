@@ -15,6 +15,8 @@ import com.google.gson.Gson;
 import pers.liujunyi.bookkeeping.entity.TCoreFunction;
 import pers.liujunyi.bookkeeping.mapper.ICoreFunctionMapper;
 import pers.liujunyi.bookkeeping.service.ICoreFunctionService;
+import pers.liujunyi.bookkeeping.service.ICoreRoleFunctionService;
+import pers.liujunyi.bookkeeping.service.ICoreRoleModuleFunctionService;
 import pers.liujunyi.bookkeeping.util.Constants;
 import pers.liujunyi.bookkeeping.util.DateTimeUtil;
 
@@ -35,6 +37,10 @@ public class CoreFunctionServiceImpl implements ICoreFunctionService {
 	private static final Logger LOGGER = Logger.getLogger(CoreFunctionServiceImpl.class);
 	@Autowired
 	private ICoreFunctionMapper functionMapper;
+	@Autowired
+	private ICoreRoleFunctionService  roleFunctionService;
+	@Autowired
+	private ICoreRoleModuleFunctionService roleModuleFunctionService;
 	
 	@Override
 	public int addFunction(TCoreFunction function) {
@@ -93,7 +99,12 @@ public class CoreFunctionServiceImpl implements ICoreFunctionService {
 		AtomicBoolean success = new AtomicBoolean(false);
 		String message = Constants.DELETE_FAIL_MSG;
 		try {
+			//删除自身数据
 			AtomicInteger count = new AtomicInteger(functionMapper.deletes(ids));
+			//删除关联数据(关联表：t_core_role_function)
+			roleFunctionService.deletesFunctionId(ids);
+			//删除关联数据(关联表：t_core_role_module_function)
+			roleModuleFunctionService.deleteFunctionId(ids);
 			if(count.get() > 0){
 				success.set(true);
 				message = Constants.DELETE_SUCCESS_MSG;

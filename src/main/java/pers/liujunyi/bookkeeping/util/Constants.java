@@ -1,5 +1,8 @@
 package pers.liujunyi.bookkeeping.util;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 /***
  * 文件名称: Constants.java
  * 文件描述: 系统中配置常量类
@@ -28,6 +31,7 @@ public class Constants {
 	public static final String LOCK_SUCCESS_MSG = "锁定数据成功.";
 	public static final String UPDATE_FAIL_MSG = "更新数据状态失败.";
 	public static final String UPDATE_SUCCESS_MSG = "更新数据状态成功.";
+	public static final String SAVE_CODE_MSG  = "代码值重复,请重新输入.";
 	/* 表示编辑数据 */
 	public static final String EDIT = "edit";
 	/* 手机发送短信信息 */
@@ -49,7 +53,11 @@ public class Constants {
 	/* 用户session 的key */
 	public static final String USER_SESSION = "user_session";
 	/* 系统接口访问IP地址 */
-	public static final String ITEM_FILE_IP = "http://192.168.0.132:8080/DurisdictionManage";
+	public static  String ITEM_FILE_IP = "";
+	/* 用户默认头像  */
+	public static  String USER_HEADPHOTO = "";
+	/* 项目名称  */
+	public static  String ITEM_NAME = ":8080/TeachingMoral";
 	/* 删除状态  1001 未删除  */
 	public static final String DELETE_NONE_STATUS = "1001";
 	/* 删除状态  1002 已删除  */
@@ -58,4 +66,15 @@ public class Constants {
 	public static final String ACTIVE_STATUS = "1001";
 	/*  1002 锁定状态  */
 	public static final String LOCK_STATUS = "1002";
+	
+	static {
+		try {
+			ITEM_FILE_IP = "http://"+InetAddress.getLocalHost().getHostAddress()+ITEM_NAME;
+			USER_HEADPHOTO = ITEM_FILE_IP+ITEM_NAME+"/resources/pages/images/avatar1.jpg";
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+         System.out.println(ITEM_FILE_IP);
+     }
+
 }

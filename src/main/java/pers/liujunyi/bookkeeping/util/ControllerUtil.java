@@ -256,4 +256,37 @@ public class ControllerUtil {
 		return obj;
 	}
 	
+	/**
+	 * 在原有json数据中增加属性值
+	 * @param json
+	 * @param map
+	 * @return  返回最新json
+	 */
+	public static String getAppendJosnObject(String json,ConcurrentMap<String, Object> map){
+		String resultJson ="[]"; 
+		/*try {
+			JsonParser parser = new JsonParser();
+			//通过JsonParser对象可以把json格式的字符串解析成一个JsonElement对象
+			JsonElement el = parser.parse(json);
+			if(el.isJsonArray()){
+				JsonArray jsonArray =  el.getAsJsonArray();
+			    Iterator<?> it = jsonArray.iterator();
+				while(it.hasNext()){
+					 JsonObject obj = (JsonObject) it.next();
+				     if(map != null && !map.isEmpty()){
+				    	 for(Map.Entry<String, Object> entry : map.entrySet()){
+				    		 //在json中追加key-value
+				    		 obj.add(entry.getKey(), parser.parse(entry.getValue()));
+				    	 }
+				     }
+				     jsonArray.add(obj);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			LOGGER.error("在原有json数据中增加属性值出现异常.");
+		}*/
+		return resultJson;
+	}
+	
 }

@@ -35,11 +35,18 @@ public interface ICoreModulesMapper {
 	public int editModules(TCoreModules modules);
 	
 	/**
-	 * 删除资源模块
+	 * 根据主键删除资源模块
 	 * @param ids
 	 * @return
 	 */
 	public int deletes(String[] ids);
+	
+	/**
+	 * 根据模块代码删除
+	 * @param moduleCoes
+	 * @return
+	 */
+	public int deletesAndModuleCodes(String[] moduleCoes);
 	
 	/**
 	 * 更新模块状态
