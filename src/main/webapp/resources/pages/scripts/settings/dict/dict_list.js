@@ -25,7 +25,7 @@ var Dict = {
                         required: true,
                         numberLetter :true,
                         remote: {
-						    url: "tally/dict/checkDictWord",     //后台处理程序
+						    url: "bookkeeping/dict/checkDictWord",     //后台处理程序
 						    type: "post",               //数据发送方式
 						    dataType: "json",           //接受数据格式   
 						    data: {                     //要传递的数据
@@ -55,7 +55,7 @@ var Dict = {
                     entityFieldName: {
                         maxlength: 50,
                         remote: {
-						    url: "tally/dict/checkDictEntityAndFieldName",     //后台处理程序
+						    url: "bookkeeping/dict/checkDictEntityAndFieldName",     //后台处理程序
 						    type: "post",               //数据发送方式
 						    dataType: "json",           //接受数据格式   
 						    data: {                     //要传递的数据
@@ -140,7 +140,7 @@ var Dict = {
 	   commonUtil.inputTrim();	
 	   if(Dict.form.validate().form()){
 		   	$.ajax({
-		      url : 'tally/dict/saveInfo',
+		      url : 'bookkeeping/dict/saveInfo',
 		      data :$("#dict-form").serialize(),
 		      type : "post",
 		      dataType : 'json',
@@ -186,7 +186,7 @@ var Dict = {
 		    zTreeWidgetInputId : "",     //树被选中的节点ID
 		    zTreeNodeIdValue : "0",      //节点值
 		    searchInputId : "", //查询条件input ID
-		    zTreeUrl : "tally/dict/dictTree",
+		    zTreeUrl : "bookkeeping/dict/dictTree",
 		    onCloseTree : function(){
 		       
 		    },
@@ -224,7 +224,7 @@ var Dict = {
 	initGrid : function(){
 	    var dictGrid = $("#dictDataGrid");
 	    Dict.dataGrid = dictGrid.bootstrapTable({
-		    url: "tally/dict/dictList",              //请求后台的URL
+		    url: "bookkeeping/dict/dictList",              //请求后台的URL
 		    mothed:"post",                           //请求方式
 		    dataType: "json",
 		    //toolbar : "#toolbar",                   //工具栏ID
@@ -335,7 +335,7 @@ var Dict = {
 	updateState : function(id,state){
 	    
 		$.ajax({
-		    url : 'tally/dict/updateDictState',
+		    url : 'bookkeeping/dict/updateDictState',
 		    data : { id : id, stateValue : state},
 		    type : "post",
 		    dataType : "json",

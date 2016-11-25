@@ -457,24 +457,31 @@
   </select>
   
   <!-- 根据登录名和登录密码查询用户信息 -->
-  <select id="getSingleUserInfo" resultType="CoreUser">
+  <select id="getSingleUserInfo" resultMap="userResultMap">
      select id,user_code,is_activate from t_core_user  where
      login_user = #{loginUser,jdbcType=VARCHAR} and 
      login_pwd = #{loginPwd,jdbcType=VARCHAR} and
      delete_flag = '1001'
   </select>
   
+  <select id="getSingleUserEInfo" resultMap="userResultMap">
+     select id,user_code,is_activate from t_core_user  where
+     login_user = #{loginUser,jdbcType=VARCHAR} and 
+     login_pwd = #{loginPwd,jdbcType=VARCHAR} and
+     user_phone = #{userPhone,jdbcType=VARCHAR} and
+     delete_flag = '1001'
+  </select>
  
   
   <!-- 根据用户编号查询用户信息 -->
-  <select id="getSingleCodeUserInfo" resultType="CoreUser">
+  <select id="getSingleCodeUserInfo" resultMap="userResultMap">
      select <include refid="base_column_list"></include> from t_core_user  where
      user_code = #{userCode,jdbcType=VARCHAR} and 
      delete_flag = '1001'
   </select>
   
    <!-- 根据主键ID查询用户信息 -->
-  <select id="getSingleUserIdInfo" resultType="CoreUser">
+  <select id="getSingleUserIdInfo" resultMap="userResultMap">
      select <include refid="base_column_list"></include> from t_core_user  where
      id = #{id,jdbcType=VARCHAR} and 
      delete_flag = '1001'

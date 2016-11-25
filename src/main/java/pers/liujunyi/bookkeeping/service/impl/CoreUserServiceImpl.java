@@ -53,7 +53,7 @@ public class CoreUserServiceImpl implements ICoreUserService {
 	}
 
 	@Override
-	public TCoreUser getSingleUserInfo(String id) {
+	public TCoreUser getSingleUserIdInfo(String id) {
 		return userMapper.getSingleUserIdInfo(id);
 	}
 
@@ -63,9 +63,9 @@ public class CoreUserServiceImpl implements ICoreUserService {
 	}
 
 	@Override
-	public TCoreUser getSingleUserInfo(String loginUser, String userPhone,
+	public TCoreUser getSingleUserEInfo(String loginUser, String userPhone,
 			String userEmail) {
-		return userMapper.getSingleUserInfo(loginUser, userPhone, userEmail);
+		return userMapper.getSingleUserEInfo(loginUser, userPhone, userEmail);
 	}
 
 	@Override

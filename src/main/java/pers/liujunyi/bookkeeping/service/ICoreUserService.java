@@ -55,7 +55,7 @@ public interface ICoreUserService {
 	 * @param id 主键ID
 	 * @return 返回用户信息
 	 */
-	public TCoreUser getSingleUserInfo(String id);
+	public TCoreUser getSingleUserIdInfo(String id);
 	
 	/**
 	 * 根据用户编号查询用户信息
@@ -71,7 +71,7 @@ public interface ICoreUserService {
 	 * @param userEmail 邮箱
 	 * @return 返回用户信息
 	 */
-	public TCoreUser getSingleUserInfo(String loginUser,String userPhone,String userEmail);
+	public TCoreUser getSingleUserEInfo(String loginUser,String userPhone,String userEmail);
 	
 	/**
 	 * 用户登录

@@ -186,26 +186,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                                 </a>
                                  <!-- 第二级菜单项 -->
                                 <ul class="sub-menu">
-                                    <li class="nav-item start active open">
-                                        <a href="javaScript:HomePage.openIframePage('teacher/myUpfile/initListPage')" class="nav-link ">
+                                    <!-- <li class="nav-item start active open">
+                                        <a href="javaScript:HomePage.openIframePage('')" class="nav-link ">
                                             <i class="fa fa-file-powerpoint-o"></i>
                                             <span class="title">PPT管理</span>
                                             <span class="selected"></span>
                                         </a>
                                     </li>
                                      <li class="nav-item  ">
-                                        <a href="javaScript:HomePage.openIframePage('teacher/myUpfile/init')" class="nav-link ">
+                                        <a href="javaScript:HomePage.openIframePage('')" class="nav-link ">
                                            
                                             <i class="fa fa-cloud-upload"></i>
                                             <span class="title">上传PPT</span>
                                         </a>
-                                    </li>
+                                    </li> -->
                                 </ul>
                             </li>
                           <!--   <li class="heading">
                                 <h3 class="uppercase">Features</h3>
                             </li> -->
-                            <!-- <li class="nav-item  ">
+                          <li class="nav-item  ">
                                 <a href="javascript:;" class="nav-link nav-toggle">
                                     <i class="icon-settings"></i>
                                     <span class="title">系统设置</span>
@@ -213,23 +213,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                                 </a>
                                 <ul class="sub-menu">
                                     <li class="nav-item  ">
-                                        <a href="javaScript:HomePage.openIframePage('tally/role/initList')" class="nav-link ">
+                                        <a href="javaScript:HomePage.openIframePage('bookkeeping/role/initList')" class="nav-link ">
                                             <span class="title">角色</span>
                                         </a>
                                     </li>
                                     <li class="nav-item  ">
-                                        <a href="javaScript:HomePage.openIframePage('tally/dict/initList')" class="nav-link ">
+                                        <a href="javaScript:HomePage.openIframePage('bookkeeping/dict/initList')" class="nav-link ">
                                             <span class="title">业务字典</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javaScript:HomePage.openIframePage('teacher/myUpfile/init')" class="nav-link ">
-                                            <span class="title">ppt转图片</span>
                                         </a>
                                     </li>
                                     
                                 </ul>
-                            </li> -->
+                            </li> 
                            
                         </ul>
                         <!-- END SIDEBAR MENU -->
@@ -252,7 +247,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                                     <i class="fa fa-angle-double-right"></i>
                                 </li>
                                 <li>
-                                    <a href="javaScript:HomePage.openIframePage('teacher/myUpfile/initListPage')">PPT管理</a>
+                                    <a href="javaScript:HomePage.openIframePage('')">PPT管理</a>
                                   <!--   <span >PPT</span> -->
                                 </li>
                             </ul>

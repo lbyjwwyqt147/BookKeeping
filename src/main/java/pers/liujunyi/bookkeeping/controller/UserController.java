@@ -147,7 +147,7 @@ public class UserController {
 			String[] userArray =  serviceUtil.getUserSession(request);
 			id  = userArray[0];
 		}
-		TCoreUser user = userService.getSingleUserInfo(id);
+		TCoreUser user = userService.getSingleUserIdInfo(id);
 		ControllerUtil.writeJavaScript(response, user);
 	}
 	

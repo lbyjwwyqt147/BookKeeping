@@ -95,7 +95,7 @@ public class RoleController {
 	 * @param response
 	 */
 	@SuppressWarnings("unused")
-	@RequestMapping(value="roleList",method=RequestMethod.POST)
+	@RequestMapping(value="roleList")
 	public  void getRoleList(Integer pageNum,Integer limit,HttpServletRequest request,HttpServletResponse response){
 		String resultJson = "{\"rows\":[],\"total\":0}";
 		try {
@@ -118,6 +118,7 @@ public class RoleController {
 	 * @param request
 	 * @param response
 	 */
+	@RequestMapping(value="deletes",method=RequestMethod.POST)
 	public void deletes(String code,HttpServletRequest request,HttpServletResponse response){
 		String[] codes =  code.split(",");
 		String resultJson =  roleService.deletesAndrelevance(codes);
@@ -131,6 +132,7 @@ public class RoleController {
 	 * @param request   
 	 * @param response
 	 */
+	@RequestMapping(value="updateStatus",method=RequestMethod.POST)
 	public void updateStatus(String id,HttpServletRequest request,HttpServletResponse response){
 		ConcurrentMap<String, Object> map = new ConcurrentHashMap<String, Object>();
 		AtomicBoolean success = new AtomicBoolean(false);

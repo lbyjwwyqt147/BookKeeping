@@ -63,7 +63,7 @@ public interface ICoreUserMapper {
 	 * @param userEmail 邮箱
 	 * @return 返回用户信息
 	 */
-	public TCoreUser getSingleUserInfo(@Param("loginUser")String loginUser,@Param("userPhone")String userPhone,@Param("userEmail")String userEmail);
+	public TCoreUser getSingleUserEInfo(@Param("loginUser")String loginUser,@Param("userPhone")String userPhone,@Param("userEmail")String userEmail);
 	
 	/**
 	 * 根据 登录名、手机号、邮箱、证件类型、身份证号码 查询用户主键ID (判断某个值是否存在 会用到这个方法)
