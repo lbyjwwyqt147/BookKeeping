@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="pers.liujunyi.bookkeeping.mapper.ICoreFunctionMapper" >
+  <resultMap id="BaseResultMap" type="pers.liujunyi.bookkeeping.entity.TCoreFunction" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="function_code" property="functionCode" jdbcType="VARCHAR" />
+    <result column="function_name" property="functionName" jdbcType="VARCHAR" />
+    <result column="is_activate" property="isActivate" jdbcType="CHAR" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="CHAR" />
+    <result column="function_description" property="functionDescription" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="VARCHAR" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, function_code, function_name, is_activate, delete_flag, function_description, 
+    create_user, create_date, update_user, update_date
+  </sql>
+  
+  <!-- 根据ID或者代码值查询 -->
+  <select id="findFunction" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_core_function
+    where delete_flag = '1001'
+    <if test="id != null and  id !=''">
+       and id = #{id,jdbcType=VARCHAR}
+    </if> 
+    <if test="code != null and code   !=''">
+       and function_code = #{functionCode,jdbcType=VARCHAR}
+    </if> 
+  
+  </select>
+  
+    <!-- 查询列表 -->
+  <select id="findFunsList" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_core_function
+    where delete_flag = '1001'
+    <if test="id != null and  id !=''">
+       and id = #{id,jdbcType=VARCHAR}
+    </if> 
+    <if test="functionCode != null and   functionCode !=''">
+       and function_code = #{functionCode,jdbcType=VARCHAR}
+    </if> 
+  
+  </select>
+  
+  <!-- 删除 -->
+  <delete id="deletes" >
+    delete from t_core_function
+    where id in
+    <foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+       #{item,jdbcType=VARCHAR}
+    </foreach>
+  </delete>
+
+  
+  <!-- 新增 -->
+  <insert id="addFunction" parameterType="pers.liujunyi.bookkeeping.entity.TCoreFunction" >
+    <!-- 生成主键的uuid -->
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">  
+        select  replace(uuid(),'-','')  from dual  
+    </selectKey> 
+    
+    insert into t_core_function
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="functionCode != null" >
+        function_code,
+      </if>
+      <if test="functionName != null" >
+        function_name,
+      </if>
+      <if test="isActivate != null" >
+        is_activate,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+      <if test="functionDescription != null" >
+        function_description,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="functionCode != null" >
+        #{functionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="functionName != null" >
+        #{functionName,jdbcType=VARCHAR},
+      </if>
+      <if test="isActivate != null" >
+        #{isActivate,jdbcType=CHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=CHAR},
+      </if>
+      <if test="functionDescription != null" >
+        #{functionDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 编辑 -->
+  <update id="editFunction" parameterType="pers.liujunyi.bookkeeping.entity.TCoreFunction" >
+    update t_core_function
+    <set >
+      <if test="functionCode != null" >
+        function_code = #{functionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="functionName != null" >
+        function_name = #{functionName,jdbcType=VARCHAR},
+      </if>
+      <if test="isActivate != null" >
+        is_activate = #{isActivate,jdbcType=CHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=CHAR},
+      </if>
+      <if test="functionDescription != null" >
+        function_description = #{functionDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 更新状态 -->
+  <update id="updateStatus"  >
+    update t_core_function set is_activate = #{isActivate,jdbcType=CHAR}
+    where id in
+    <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+       #{item,jdbcType=VARCHAR}
+    </foreach>
+  </update>
+</mapper>

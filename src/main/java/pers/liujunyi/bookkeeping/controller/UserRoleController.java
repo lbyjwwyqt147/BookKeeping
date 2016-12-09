@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.MvcNamespaceHandler;
 
 import pers.liujunyi.bookkeeping.entity.PageBean;
 import pers.liujunyi.bookkeeping.entity.TCoreUserRole;
@@ -41,6 +43,21 @@ public class UserRoleController {
 
 	@Autowired
 	private ICoreUserRoleService   userRoleService;
+	
+	
+	/**
+	 * 初始化列表页面
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="initList")
+	public ModelAndView initUpload(String userId,HttpServletRequest request,HttpServletResponse response){
+		ModelAndView mv = new ModelAndView("settings/role/user_role");
+		mv.addObject("userId", userId);
+		return mv;
+	
+	}
 	
 	/**
 	 * 保存数据
@@ -93,7 +110,7 @@ public class UserRoleController {
 	 * @param response
 	 */
 	@SuppressWarnings("unused")
-	@RequestMapping(value="findList",method=RequestMethod.POST)
+	@RequestMapping(value="findList")
 	public void findList(Integer pageNum,Integer limit,HttpServletRequest request,HttpServletResponse response){
 		String resultJson = "{\"rows\":[],\"total\":0}";
 		try {

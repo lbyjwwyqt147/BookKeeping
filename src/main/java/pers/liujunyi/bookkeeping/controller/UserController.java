@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -45,6 +46,18 @@ public class UserController {
 	private ICoreUserService userService;
 	@Autowired
 	private IServiceUtil serviceUtil;
+	
+	/**
+	 * 初始化列表页面
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="/initList")
+	public ModelAndView initList(HttpServletRequest request,HttpServletResponse response){
+		ModelAndView mv = new ModelAndView("settings/user/user_list");
+	    return mv;
+	}
 	
 	/**
 	 * 保存用户信息
@@ -86,6 +99,7 @@ public class UserController {
 	 * @param request
 	 * @param response
 	 */
+	@RequestMapping(value="/logOut",method=RequestMethod.POST)
 	public void logOut(String userCode,HttpServletRequest request,HttpServletResponse response){
 		ConcurrentMap<String, Object> map = new ConcurrentHashMap<String, Object>();
 		AtomicBoolean success = new AtomicBoolean(false);
@@ -118,7 +132,7 @@ public class UserController {
 	 * @param response
 	 */
 	@SuppressWarnings("unused")
-	@RequestMapping(value="findUserList",method=RequestMethod.POST)
+	@RequestMapping(value="findUserList")
 	public void findUserList(Integer pageNum,Integer limit,HttpServletRequest request,HttpServletResponse response){
 		String resultJson = "{\"rows\":[],\"total\":0}";
 		try {

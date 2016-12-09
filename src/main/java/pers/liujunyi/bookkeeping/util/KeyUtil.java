@@ -1,6 +1,7 @@
 package pers.liujunyi.bookkeeping.util;
 
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -44,6 +45,14 @@ public class KeyUtil {
 		AtomicInteger randomNumber =  new AtomicInteger(random.nextInt(100));
 		String nanotimeString =  String.valueOf(nanotime.get());
 		return randomNumber.addAndGet(Integer.valueOf(nanotimeString.substring(nanotimeString.length()-digit)));
+	}
+	
+	/**
+	 * uuid
+	 * @return
+	 */
+	public static String uuid(){
+		return UUID.randomUUID().toString().replace("-", "");
 	}
 	
 	public static void main(String[] sts){

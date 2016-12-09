@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xmlns:security="http://www.springframework.org/schema/security"
+xsi:schemaLocation="http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-4.3.xsd  
+http://www.springframework.org/schema/security 
+http://www.springframework.org/schema/security/spring-security.xsd">
+
+  
+  <!-- 排除不需要过滤的链接 开始  -->
+  <http pattern="/bookkeeping/user/saveUser" security="none" /> 
+  <http pattern="/bookkeeping/user/userLogin" security="none" /> 
+  <http pattern="/bookkeeping/user/checkAccounts" security="none" /> 
+  <!-- 排除不需要过滤的链接 结束  -->
+  
+  
+  <!--auto-config = true 则使用from-login. 如果不使用该属性 则默认为http-basic(没有session).-->  
+  <!-- lowercase-comparisons：表示URL比较前先转为小写。-->  
+  <!-- path-type：表示使用Apache Ant的匹配模式。-->  
+  <!--access-denied-page：访问拒绝时转向的页面。-->  
+  <!-- access-decision-manager-ref：指定了自定义的访问策略管理器。--> 
+
+
+
+  <http auto-config='true'>
+         <!-- 不再在这里对url进行权限拦截，在数据库中取出url中对应的权限  
+           <intercept-url pattern="/**" access="ROLE_USER" />
+         -->
+       
+       
+          <!--login-page：指定登录页面。  -->  
+          <!-- login-processing-url：指定了客户在登录页面中按下 Sign In 按钮时要访问的 URL。-->  
+          <!-- authentication-failure-url：指定了身份验证失败时跳转到的页面。-->  
+          <!-- default-target-url：指定了成功进行身份验证和授权后默认呈现给用户的页面。-->  
+          <!-- always-use-default-target：指定了是否在身份验证通过后总是跳转到default-target-url属性指定的URL。 -->  
+          
+         <form-login login-page="/" default-target-url='/bookkeeping/home/initHome'  
+            always-use-default-target="true" authentication-failure-url="/main/login?error=1" />   
+            
+            
+         <!--logout-url：指定了用于响应退出系统请求的URL。其默认值为：/j_spring_security_logout。-->  
+         <!-- logout-success-url：退出系统后转向的URL。-->  
+         <!-- invalidate-session：指定在退出系统时是否要销毁Session。-->  
+         <logout invalidate-session="true" logout-success-url="/"  
+            logout-url="/j_spring_security_logout" />  
+            
+         <!-- 实现免登陆验证 -->  
+         <remember-me />
+          
+         <!-- max-sessions:允许用户帐号登录的次数。范例限制用户只能登录一次。-->  
+         <!-- 此值表示：用户第二次登录时，前一次的登录信息都被清空。-->  
+         <!--   exception-if-maximum-exceeded:默认为false，-->  
+         <!-- 当exception-if-maximum-exceeded="true"时系统会拒绝第二次登录。-->  
+  
+        <session-management invalid-session-url="/" session-fixation-protection="none">  
+            <concurrency-control max-sessions="1"  error-if-maximum-exceeded="false" />  
+        </session-management>     
+              
+          <!-- 自定义过滤器 -->    
+<!--          <custom-filter ref="myFilter" before="FILTER_SECURITY_INTERCEPTOR" />
+ -->         <!-- <session-management  
+            session-authentication-strategy-ref="sas" />     --> 
+              
+           
+   </http>
+ 
+      
+    <!--   <beans:bean id="sas"  class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">  
+        <beans:constructor-arg name="sessionRegistry"  
+            ref="sessionRegistry" />  
+        <beans:property name="maximumSessions" value="1" />  
+        防止session攻击  
+        <beans:property name="alwaysCreateSession" value="true" />  
+        <beans:property name="migrateSessionAttributes" value="false" />  
+         同一个帐号 同时只能一个人登录  
+        <beans:property name="exceptionIfMaximumExceeded"  
+            value="false" />  
+    </beans:bean>  
+    <beans:bean id="sessionRegistry"  
+        class="org.springframework.security.core.session.SessionRegistryImpl" />   -->
+    <!-- 
+           事件监听:实现了ApplicationListener监听接口，包括AuthenticationCredentialsNotFoundEvent 事件，-->  
+    <!-- AuthorizationFailureEvent事件，AuthorizedEvent事件， PublicInvocationEvent事件-->  
+   <!--  <beans:bean  
+        class="org.springframework.security.authentication.event.LoggerListener" />   -->
+    
+       
+        <!-- 认证过滤器 -->  
+        <beans:bean id="myFilter" class="pers.liujunyi.bookkeeping.securityFilter.MyFilterSecurityInterceptor"> 
+             
+            <beans:property name="authenticationManager" ref="authenticationManager"></beans:property>
+                              
+            <beans:property name="accessDecisionManager" ref="myAccessDecisionManagerBean"></beans:property>  
+                      
+            <beans:property name="securityMetadataSource" ref="mySecurityMetadataSource"></beans:property>
+            
+       </beans:bean>
+ 
+     <!-- spring security提供的用户登录验证 ，alias的值对应上面的ref="authenticationManager" -->
+     <!-- 实现了UserDetailsService的Bean -->  
+    <authentication-manager alias="authenticationManager">  
+        <authentication-provider user-service-ref="userDetailServiceImpl">  
+            <!-- 登入 密码  采用MD5加密 -->  
+            <password-encoder hash="md5" ref="passwordEncoder">  
+            </password-encoder>
+        </authentication-provider>  
+    </authentication-manager>  
+       
+        <!-- 获取登录的用户、用户权限 -->   
+        <!--userDetailServiceImpl 获取登录的用户、用户权限 -->           
+        <beans:bean id="userDetailServiceImpl" class="pers.liujunyi.bookkeeping.securityFilter.MyUserDetailsService">
+        </beans:bean>
+         
+        <!-- 判断是否有权限访问请求的url页面 -->
+        <!-- 验证用户请求资源  是否拥有权限 -->  
+        <beans:bean id="myAccessDecisionManagerBean" class="pers.liujunyi.bookkeeping.securityFilter.MyAccessDecisionManager">
+        </beans:bean>     
+         
+        <!-- 获取数据库中所有的url资源，读出url资源与权限的对应关系  -->
+        <!-- 系统运行时加载 系统要拦截的资源   与用户请求时要过滤的资源 -->      
+        <beans:bean id="mySecurityMetadataSource" class="pers.liujunyi.bookkeeping.securityFilter.MyInvocationSecurityMetadataSourceService">
+           <!--  <beans:property name="rolesService" ref="rolesService1"></beans:property>
+            <beans:property name="rolesAuthoritiesService" ref="rolesAuthoritiesService1"></beans:property>
+            <beans:property name="sysResourcesService" ref="sysResourcesService1"></beans:property> -->
+        </beans:bean>  
+        
+    <!--     角色service
+       <beans:bean id="rolesService1" class="pers.liujunyi.bookkeeping.service.impl.CoreRoleServiceImpl">
+       </beans:bean>  
+       角色资源service
+       <beans:bean id="rolesAuthoritiesService1" class="pers.liujunyi.bookkeeping.service.impl.CoreRoleModuleServiceImpl">
+       </beans:bean> 
+       资源service
+       <beans:bean id="sysResourcesService1" class="pers.liujunyi.bookkeeping.service.impl.CoreModulesServiceImpl">
+       </beans:bean>  -->
+        
+         <!-- 用户的密码加密或解密 -->  
+         <beans:bean id="passwordEncoder"  
+            class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" /> 
+
+</beans:beans>  

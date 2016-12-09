@@ -54,7 +54,7 @@ public class FunctionController {
 	 */
 	@RequestMapping(value="initList")
 	public ModelAndView initList(HttpServletRequest request,HttpServletResponse response){
-		ModelAndView view = new ModelAndView();
+		ModelAndView view = new ModelAndView("settings/function/function_list");
 		return view;
 	}
 	
@@ -80,6 +80,7 @@ public class FunctionController {
 	 * @param response
 	 */
 	@SuppressWarnings("unused")
+	@RequestMapping(value="list")
 	public void findList(Integer pageNum,Integer limit,HttpServletRequest request,HttpServletResponse response){
 		String resultJson = "{\"rows\":[],\"total\":0}";
 		try {

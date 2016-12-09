@@ -44,7 +44,7 @@ import pers.liujunyi.bookkeeping.util.DateTimeUtil;
  * @author liujunyi
  */
 @Controller
-@RequestMapping("/bookkeeping/dict")
+@RequestMapping("/bookkeeping/modules")
 public class ModulesController {
 
 	@Autowired
@@ -56,8 +56,9 @@ public class ModulesController {
 	 * @param response
 	 * @return
 	 */
+	@RequestMapping(value="initList")
 	public ModelAndView initList(HttpServletRequest request,HttpServletResponse response){
-		ModelAndView model = new ModelAndView();
+		ModelAndView model = new ModelAndView("settings/modules/modules_list");
 		AtomicLong count = new AtomicLong(modulesService.getModulesCount());
 		if(count.get() == 0){
 			TCoreModules modules = new TCoreModules();
@@ -67,11 +68,26 @@ public class ModulesController {
 			modules.setModulePid("0");
 			modules.setModuleIconOne("");
 			modules.setIsActivate("1001");
+			modules.setModuleUrl("url");
 			modules.setModuleDescription("系统自动创建");
 			modules.setCreateDate(DateTimeUtil.getCurrentDateTime());
 			modules.setCreateUser("系统自动创建");
 			modulesService.addModules(modules);
 		}
+		return model;
+	}
+	
+	/**
+	 * 初始化新增页面
+	 * @param pid      编号
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="initAdd")
+	public ModelAndView initAdd(String pid,HttpServletRequest request,HttpServletResponse response){
+		ModelAndView model = new ModelAndView("settings/modules/modules_add");
+		model.addObject("pid", pid);
 		return model;
 	}
 	
@@ -84,7 +100,7 @@ public class ModulesController {
 	 * @param response
 	 */
 	@SuppressWarnings({"unused" })
-	@RequestMapping(value="getModulesList",method=RequestMethod.POST)
+	@RequestMapping(value="getModulesList")
 	public void getModulesList(Integer pageNum,Integer limit,HttpServletRequest request,HttpServletResponse response){
 		String resultJson = "{\"rows\":[],\"total\":0}";
 		try {
@@ -134,6 +150,7 @@ public class ModulesController {
 	 * @param request
 	 * @param response
 	 */
+	@RequestMapping(value="updateStatus",method=RequestMethod.POST)
 	public void updateStatus(String id,String isActivate,HttpServletRequest request,HttpServletResponse response){
 		ConcurrentMap<String,Object> map = new ConcurrentHashMap<String, Object>();
 		AtomicBoolean success = new AtomicBoolean(false);
@@ -162,9 +179,10 @@ public class ModulesController {
 	 * @param request
 	 * @param response
 	 */
+	@RequestMapping(value="modulesTree",method=RequestMethod.POST)
 	public void modulesTree(HttpServletRequest request,HttpServletResponse response){
 		try {
-			ConcurrentMap<String, Object> params = new ConcurrentHashMap<String, Object>();
+			ConcurrentMap<String, Object> params = ControllerUtil.getFormData(request);
 			String nid = params.get("nid").toString();
 			String ztreeJson = modulesService.zTreeJson(nid, params, request, "");
 			if(nid.trim().equals("0")){

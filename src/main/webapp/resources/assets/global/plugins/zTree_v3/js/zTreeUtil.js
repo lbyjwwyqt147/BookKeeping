@@ -14,6 +14,13 @@ var zTreeUtil = {
 			zTreeUtil.zTree.reAsyncChildNodes(nodes[0], "refresh");
 		}
 	},
+	/**
+	 * 获取选中的nodes
+	 */
+	getSelectNodes:function(){
+       var nodes =zTreeUtil.zTree.getCheckedNodes(true);
+       return nodes;
+	},
 	
     /**
      * 创建树
@@ -279,6 +286,9 @@ var zTreeUtil = {
 			         selectedMulti: false,//设置是否允许同时选中多个节点。  
 			         expandSpeed: 400//"slow"//节点展开速度  
 		     },  
+		     check: {
+				enable: params.check
+			 },
 		     data: {  
 		         simpleData: {//是否为简单数据类型JSON  
 		             enable:true,  

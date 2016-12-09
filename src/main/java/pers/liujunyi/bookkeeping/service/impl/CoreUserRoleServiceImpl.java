@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+
 import pers.liujunyi.bookkeeping.entity.TCoreUserRole;
 import pers.liujunyi.bookkeeping.mapper.ICoreUserRoleMapper;
 import pers.liujunyi.bookkeeping.service.ICoreUserRoleService;
+import pers.liujunyi.bookkeeping.util.AttachmentFileUtil;
 import pers.liujunyi.bookkeeping.util.Constants;
+import pers.liujunyi.bookkeeping.util.KeyUtil;
 
 /***
  * 文件名称: CoreUserRoleServiceImpl.java
@@ -51,9 +54,11 @@ public class CoreUserRoleServiceImpl implements ICoreUserRoleService {
 			    String[] roleIds = roleId.split(",");
 				for(int i = 0; i < roleCodes.length; i++){
 					TCoreUserRole  userRole = new TCoreUserRole();
+					userRole.setId(KeyUtil.uuid());
 					userRole.setIsActivate(Constants.DELETE_NONE_STATUS);
 					userRole.setRoleCode(roleCodes[i]);
 					userRole.setRoleId(roleIds[i]);
+					userRole.setUserId(userId);
 					list.add(userRole);
 				}
 				count.set(userRoleMapper.addUserRole(list));

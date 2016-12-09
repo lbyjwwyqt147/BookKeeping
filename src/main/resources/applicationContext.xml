@@ -79,6 +79,7 @@
     <!-- 数据源事务管理 -->
     <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource" />
+        <property name="globalRollbackOnParticipationFailure" value="false" />
     </bean>
    
    <!-- 事务管理 属性 -->
@@ -118,6 +119,7 @@
     <!-- 定义日志AOP切面处理器 -->  
     <bean class="pers.liujunyi.bookkeeping.aop.LogAspect" id="logsAspect"></bean>  
     
+       
     <!-- 自动扫描dao service组件，需要把controller去掉，否则影响事务管理 -->  
     <context:component-scan base-package="pers.liujunyi.bookkeeping">
         <context:exclude-filter type="regex"  expression="pers.liujunyi.bookkeeping.controller" />

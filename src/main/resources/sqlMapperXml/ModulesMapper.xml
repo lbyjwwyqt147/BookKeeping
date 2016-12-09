@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="pers.liujunyi.bookkeeping.mapper.ICoreModulesMapper" >
+  <resultMap id="BaseResultMap" type="pers.liujunyi.bookkeeping.entity.TCoreModules" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="node_level" property="nodeLevel" jdbcType="INTEGER" />
+    <result column="node_status" property="nodeStatus" jdbcType="CHAR" />
+    <result column="module_name" property="moduleName" jdbcType="VARCHAR" />
+    <result column="module_code" property="moduleCode" jdbcType="VARCHAR" />
+    <result column="module_type" property="moduleType" jdbcType="VARCHAR" />
+    <result column="module_url" property="moduleUrl" jdbcType="VARCHAR" />
+    <result column="module_pid" property="modulePid" jdbcType="VARCHAR" />
+    <result column="module_icon_one" property="moduleIconOne" jdbcType="VARCHAR" />
+    <result column="module_icon_two" property="moduleIconTwo" jdbcType="VARCHAR" />
+    <result column="module_description" property="moduleDescription" jdbcType="VARCHAR" />
+    <result column="is_activate" property="isActivate" jdbcType="CHAR" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="CHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="VARCHAR" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="VARCHAR" />
+    <result column="attribute_one" property="attributeOne" jdbcType="VARCHAR" />
+    <result column="attribute_two" property="attributeTwo" jdbcType="VARCHAR" />
+    <result column="attribute_three" property="attributeThree" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, node_level, node_status, module_name, module_code, module_type, module_url, module_pid, 
+    module_icon_one, module_icon_two, module_description, is_activate, delete_flag, create_user, 
+    create_date, update_user, update_date, attribute_one, attribute_two, attribute_three
+  </sql>
+  
+  <!-- 获取父级编号下的最大编号值 -->
+  <select id="findMaxModulesCode" resultType="java.lang.String" parameterType="java.lang.String" >
+    select max(module_code) from t_core_modules
+    where module_pid = #{modulePid,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询列表 -->
+  <select id="findModulesList" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List"></include>
+    from t_core_modules
+    where delete_flag = '1001'
+    <if test="modulePid != null and modulePid != ''">
+      and module_pid = #{modulePid,jdbcType=VARCHAR}
+    </if>
+    <if test="isActivate != null and isActivate != ''">
+      and is_activate = #{isActivate,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <!-- 查询表中是否有数据 -->
+  <select id="getModulesCount" resultType="java.lang.Long">
+    select count(*) from t_core_modules where delete_flag = '1001' limit 0,3
+  </select>
+  
+  <!-- 根据主键删除 -->
+  <delete id="deletes" >
+    delete from t_core_modules
+    where id in
+    <foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+        #{item,jdbcType=VARCHAR}
+    </foreach>
+  </delete>
+
+  <!-- 根据模块代码删除 -->
+  <delete id="deletesAndModuleCodes" >
+    delete from t_core_modules
+    where module_code in
+    <foreach collection="array" index="index" item="item" open="(" separator="," close=")">
+        #{item,jdbcType=VARCHAR}
+    </foreach>
+  </delete>
+
+  <!-- 新增 -->
+  <insert id="addModules" parameterType="pers.liujunyi.bookkeeping.entity.TCoreModules" >
+     <!-- 生成主键的uuid -->
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">  
+        select  replace(uuid(),'-','')  from dual  
+    </selectKey> 
+    
+    insert into t_core_modules
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="nodeLevel != null" >
+        node_level,
+      </if>
+      <if test="nodeStatus != null" >
+        node_status,
+      </if>
+      <if test="moduleName != null" >
+        module_name,
+      </if>
+      <if test="moduleCode != null" >
+        module_code,
+      </if>
+      <if test="moduleType != null" >
+        module_type,
+      </if>
+      <if test="moduleUrl != null" >
+        module_url,
+      </if>
+      <if test="modulePid != null" >
+        module_pid,
+      </if>
+      <if test="moduleIconOne != null" >
+        module_icon_one,
+      </if>
+      <if test="moduleIconTwo != null" >
+        module_icon_two,
+      </if>
+      <if test="moduleDescription != null" >
+        module_description,
+      </if>
+      <if test="isActivate != null" >
+        is_activate,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="attributeOne != null" >
+        attribute_one,
+      </if>
+      <if test="attributeTwo != null" >
+        attribute_two,
+      </if>
+      <if test="attributeThree != null" >
+        attribute_three,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeLevel != null" >
+        #{nodeLevel,jdbcType=INTEGER},
+      </if>
+      <if test="nodeStatus != null" >
+        #{nodeStatus,jdbcType=CHAR},
+      </if>
+      <if test="moduleName != null" >
+        #{moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleCode != null" >
+        #{moduleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleType != null" >
+        #{moduleType,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleUrl != null" >
+        #{moduleUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="modulePid != null" >
+        #{modulePid,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleIconOne != null" >
+        #{moduleIconOne,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleIconTwo != null" >
+        #{moduleIconTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleDescription != null" >
+        #{moduleDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="isActivate != null" >
+        #{isActivate,jdbcType=CHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=CHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeOne != null" >
+        #{attributeOne,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeTwo != null" >
+        #{attributeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeThree != null" >
+        #{attributeThree,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 编辑 -->
+  <update id="editModules" parameterType="pers.liujunyi.bookkeeping.entity.TCoreModules" >
+    update t_core_modules
+    <set >
+      <if test="nodeLevel != null" >
+        node_level = #{nodeLevel,jdbcType=INTEGER},
+      </if>
+      <if test="nodeStatus != null" >
+        node_status = #{nodeStatus,jdbcType=CHAR},
+      </if>
+      <if test="moduleName != null" >
+        module_name = #{moduleName,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleCode != null" >
+        module_code = #{moduleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleType != null" >
+        module_type = #{moduleType,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleUrl != null" >
+        module_url = #{moduleUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="modulePid != null" >
+        module_pid = #{modulePid,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleIconOne != null" >
+        module_icon_one = #{moduleIconOne,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleIconTwo != null" >
+        module_icon_two = #{moduleIconTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleDescription != null" >
+        module_description = #{moduleDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="isActivate != null" >
+        is_activate = #{isActivate,jdbcType=CHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=CHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=VARCHAR},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeOne != null" >
+        attribute_one = #{attributeOne,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeTwo != null" >
+        attribute_two = #{attributeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="attributeThree != null" >
+        attribute_three = #{attributeThree,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 更新状态 -->
+  <update id="updateStatus" parameterType="pers.liujunyi.bookkeeping.entity.TCoreModules" >
+    update t_core_modules set is_activate = #{isActivate,jdbcType=CHAR},
+    where id in 
+    <foreach collection="ids" index="index" item="item" open="(" separator=","  close=")">
+       #{item,jdbcType=VARCHAR}
+    </foreach>
+  </update>
+</mapper>

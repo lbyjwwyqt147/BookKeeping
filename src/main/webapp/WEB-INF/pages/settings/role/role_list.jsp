@@ -21,7 +21,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	-->
     <jsp:include page="/WEB-INF/pages/commons/head.jsp"></jsp:include>
     <link rel="stylesheet" type="text/css" href="<%=basePath%>resources/assets/global/plugins/bootstrap-table/bootstrap-table.css">
-    
+    <link rel="stylesheet" type="text/css" href="<%=basePath%>resources/assets/global/plugins/bootstrap-table/extensions/editable/bootstrap-editable.css">
+    <link rel="stylesheet" type="text/css" href="<%=basePath%>resources/assets/global/plugins/zTree_v3/css/zTreeStyle/zTreeStyle.css">
     <link rel="stylesheet" type="text/css" href="<%=basePath%>resources/pages/css/tally_common.css">
     
    
@@ -68,13 +69,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                     <div class="portlet-title">
                         <div class="caption">
                             <i class="fa fa-leaf" style="font-size: 18px;"></i>资源模块 </div>
-   
+                        <div class="actions">
+                            <a href="javascript:Role.saveModules();" class="btn btn-default btn-sm">
+                                <i class="fa fa-check"></i> 保存</a>
+                            <a href="javascript:;" class="btn btn-default btn-sm">
+                                <i class="fa fa-trash-o"></i> 删除 </a>
+                        </div>
                     </div>
                        <div class="portlet-body">
                             <div class="row">
 		                         <div class="col-md-12">
 		               
-		                             
+		                             <div id="modulesTree" class="ztree"></div>
 		                             
 		                         </div>
 		                     </div>
@@ -89,7 +95,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <jsp:include page="/WEB-INF/pages/commons/bottom.jsp"></jsp:include>
     <script type="text/javascript" src="<%=basePath%>resources/assets/global/scripts/datatable.js"></script>
     <script type="text/javascript" src="<%=basePath%>resources/assets/global/plugins/bootstrap-table/bootstrap-table.js"></script>
+    <script type="text/javascript" src="<%=basePath%>resources/assets/global/plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.js"></script>
+    <script type="text/javascript" src="<%=basePath%>resources/assets/global/plugins/bootstrap-table/extensions/editable/bootstrap-editable.js"></script>
+    
     <script type="text/javascript" src="<%=basePath%>resources/assets/global/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js"></script>
-   <script type="text/javascript" src="<%=basePath%>resources/pages/scripts/settings/role/role_list.js"></script>
+    <script type="text/javascript" src="<%=basePath%>resources/assets/global/plugins/zTree_v3/js/jquery.ztree.core.min.js"></script>
+    <script type="text/javascript" src="<%=basePath%>resources/assets/global/plugins/zTree_v3/js/jquery.ztree.excheck.min.js"></script>
+    <script type="text/javascript" src="<%=basePath%>resources/assets/global/plugins/zTree_v3/js/zTreeUtil.js"></script>
+    <script type="text/javascript" src="<%=basePath%>resources/pages/scripts/settings/role/role_list.js"></script>
   </body>
 </html>

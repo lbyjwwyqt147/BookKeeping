@@ -18,7 +18,7 @@ var Role = {
 		    striped: true,                          //是否显示行间隔色
 		    cache: false,                           //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性
 		    pagination: true,                       //是否显示分页
-		    singleSelect: false,
+		    singleSelect: true,
 		    onlyInfoPagination : false,
 		    pageSize : 10,                          //每页的记录行数
 		    pageNumber: 1,                          //初始化加载第一页，默认第一页
@@ -49,11 +49,12 @@ var Role = {
 		                      field: 'roleCode',
 		                      width : 170,
 		                      valign: 'middle',
+		                     // editable: true,
 		                      formatter:function(value,row,index){ 
 		                      	  var valueText = value;
 		                      	  switch(value){
 	                      	          case  "100000" :
-	                      	             valueText = '<input type="text" class="form-control" name="roleCode" id="roleCode">';
+	                      	             valueText = '<input type="text" class="form-control" name="roleCode" id="roleCode" maxlength="10">';
 	                      	             break;
 		                      	  }
 		                          return valueText;
@@ -64,11 +65,28 @@ var Role = {
 		                      title: '角色名称',
 		                      field: 'roleName',
 		                      valign: 'middle',
+		                   /*   editable: {  
+				                    type: 'text',  
+				                    title: '角色名称',  
+				                    validate: function (value) {  
+				                        value = $.trim(value);  
+				                        if (!value) {  
+				                            return 'This field is required';  
+				                        }  
+				                        if (!/^\$/.test(value)) {  
+				                            return 'This field needs to start width $.'  
+				                        }  
+				                        var data = $table.bootstrapTable('getData'),  
+				                            index = $(this).parents('tr').data('index');  
+				                        console.log(data[index]);  
+				                        return '';  
+				                    }  
+				              },*/
 		                      formatter:function(value,row,index){ 
 		                      	  var valueText = value;
 		                      	  switch(value){
 	                      	          case  "100000" :
-	                      	             valueText = '<input type="text" class="form-control" name="roleName" id="roleName">';
+	                      	             valueText = '<input type="text" class="form-control" name="roleName" id="roleName" maxlength="15">';
 	                      	             break;
 		                      	  }
 		                          return valueText;
@@ -80,6 +98,7 @@ var Role = {
 		                      align: 'center',
 		                      width : 100,
 		                      valign: 'middle',
+		                     // editable: true,
 		                      formatter:function(value,row,index){ 
 		                      	  var statusText = "激活";
 		                      	  switch(value){
@@ -102,13 +121,15 @@ var Role = {
 		                  {
 		                      title: '操作',
 		                      field: 'caozuo',
-		                      width : 150,
+		                      width : 170,
 		                      align: 'center',
 		                      valign: 'middle',
 		                      formatter:function(value,row,index){  
 		                      	if(value == "100000"){
-		                      		var b = '<a href="javaScript:void(0)" mce_href="javaScript:void(0)" class="btn btn-sm btn-outline green" onclick="Role.deleteRow(this)"><i class="fa fa-check"></i> 保存</a> ';
-		                      		var d = '<a href="javaScript:void(0)" mce_href="javaScript:void(0)" class="btn btn-sm btn-outline red" onclick="Role.deleteRow(this)"><i class="fa fa-trash-o"></i> 删除</a> ';
+		                      		var rowJson = JSON.stringify(row);
+		                      		console.log(rowJson);
+		                      		var b = '<a href="javaScript:void(0)" mce_href="javaScript:void(0)" class="btn btn-sm btn-outline green" onclick="Role.saveRow(\'add\')"><i class="fa fa-check"></i> 保存</a> ';
+		                      		var d = '<a href="javaScript:void(0)" mce_href="javaScript:void(0)" class="btn btn-sm btn-outline red" onclick="Role.deleteRow(\''+ row.id +'\')"><i class="fa fa-trash-o"></i> 删除</a> ';
 		                            return b+d;
 		                      	}else{
 		                            var d = '<a href="javaScript:void(0)" mce_href="javaScript:void(0)" class="btn btn-sm btn-outline red" onclick="Role.deleteRole(\''+ row.roleCode +'\')"><i class="fa fa-trash-o"></i> 删除</a> ';
@@ -165,11 +186,54 @@ var Role = {
 	},
 	
 	/**
+	 * 保存行数据
+	 * @param {} obj  行数据
+	 */
+	saveRow : function(task){
+	/*   var roleCodeVild = {required:true,numberLetter:true};
+	   var roleNameVild = {required:true,chineseLetter:true};
+	   $("#roleCode").rules("add",roleCodeVild);
+	   $("#roleName").rules("add",roleNameVild);*/
+	   var jsonObj = {
+	       roleCode :  $("#roleCode").val(),
+	       roleName : $("#roleName").val(),
+	       task : task,
+	       isActivate : $("#isActivate").val()
+	   }
+	   console.log(jsonObj);
+	   $.ajax({
+	       url : 'bookkeeping/role/saveInfo',
+	       type : 'post',
+	       dataType : 'json',
+	       data : jsonObj,
+	       success : function(data){
+	       	   console.log(data);
+	       	   if(data.success){
+	       	      layer.msg(data.message, {icon: 1}); 
+	         	  Role.refreshGrid();
+	           }else{
+	              layer.msg(data.message, {icon: 5}); 
+	           }
+	       },
+	       error : function(){
+	         layer.msg("网络出现异常.", {icon: 5});
+	       }
+	   })
+	},
+	
+	/**
 	 * 移除行
 	 */
 	deleteRow : function(obj){
 	   console.log(obj);
-	   Role.roleGrid.bootstrapTable('remove', {field: 'id', values: '0'});
+	   var ids = $.map(Role.roleGrid.bootstrapTable('getSelections'), function (row) {
+                return row.id;
+            });
+       console.log(ids);
+       var idss = new Array();
+       idss.push(obj);
+       console.log(idss);
+	   Role.roleGrid.bootstrapTable('remove', {field: 'id', values: idss});
 	},
 	
 	/**
@@ -193,9 +257,12 @@ var Role = {
 					        if(data.success){
 					       	    layer.msg(data.message, {icon: 1}); 
 					         	Role.refreshGrid();
-					       }else{
-					           layer.msg(data.message, {icon: 5}); 
-					       }
+					        }else{
+					            layer.msg(data.message, {icon: 5}); 
+					        }
+					    },
+					    error : function(){
+					       layer.msg("网络出现异常.", {icon: 5});
 					    }
 				   })
 	         },
@@ -209,10 +276,99 @@ var Role = {
 		
 	},
 	/**
+	 * 初始化字典树
+	 */
+	initZtree : function(){
+	    zTreeUtil.createZtree({
+		    zTreeWidgetId : "modulesTree",    //树控件div Id
+		    zTreeWidgetInputValue : "0",  //树被选中的节点ID值
+		    zTreeWidgetInputId : "",     //树被选中的节点ID
+		    zTreeNodeIdValue : "0",      //节点值
+		    check : true,
+		    searchInputId : "", //查询条件input ID
+		    zTreeUrl : "bookkeeping/modules/modulesTree",
+		    onCloseTree : function(){
+		       
+		    },
+		    onMouseUp : function(){
+		    
+		    },
+		    onClick : function(event, treeId, treeNode){
+		       var nodeName = treeNode.name;
+		       var nodeId = treeNode.id;
+	           
+		    }
+		});
+	},
+	
+	/**
+	 * 刷新树
+	 */
+	refreshTree : function(){
+	    zTreeUtil.refreshTree();
+	    /* var treeObj = $.fn.zTree.getZTreeObj("dictTree");
+	     var nodes = treeObj.getSelectedNodes();
+		 if (nodes.length>0) {
+			treeObj.reAsyncChildNodes(nodes[0], "refresh");
+		 }*/
+	    
+	},
+
+	/**
+	 * 分配角色模块
+	 */
+	saveModules : function(){
+		//获取选择的角色
+	  	var json = JSON.stringify(Role.roleGrid.bootstrapTable('getSelections'));
+        var jsonObj = eval(json);
+	   	var roleIdArray = new Array();
+	   	var roleCodeArray = new Array();
+	    
+	   	$.each(jsonObj,function(i,v){
+	   		roleIdArray.push(v.id);
+	   		roleCodeArray.push(v.roleCode);
+	   	});
+	   	
+	   	var moduleId = "0";
+	   	var moduleCodeArray = new Array();
+	   	
+	   	//获取选中的菜单
+	   	var nodes = zTreeUtil.getSelectNodes();
+	   	console.log(nodes);
+	   	$.each(nodes,function(i,v){
+	   		moduleCodeArray.push(v.id);
+	   	});
+	   	
+	    $.ajax({
+					    url : 'bookkeeping/roleModule/saveInfo',
+					    data : { 
+					             roleId : roleIdArray.toString(),
+					             roleCode : roleCodeArray.toString(),
+					             moduleId : moduleId,
+					             moduleCode : moduleCodeArray.toString()
+					    },
+					    type : "post",
+					    dataType : "json",
+					    success : function(data){
+					        if(data.success){
+					       	    layer.msg(data.message, {icon: 1}); 
+					         	Role.refreshTree();
+					        }else{
+					            layer.msg(data.message, {icon: 5}); 
+					        }
+					    },
+					    error : function(){
+					       layer.msg("网络出现异常.", {icon: 5});
+					    }
+				   })
+	},
+	
+	/**
 	 * 初始化
 	 */
 	init : function(){
 	   Role.initGrid();
+	   Role.initZtree();
 	}
 }
 

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="pers.liujunyi.bookkeeping.mapper.ICoreUserRoleMapper" >
+  <resultMap id="BaseResultMap" type="pers.liujunyi.bookkeeping.entity.TCoreUserRole" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="role_id" property="roleId" jdbcType="VARCHAR" />
+    <result column="role_code" property="roleCode" jdbcType="VARCHAR" />
+    <result column="is_activate" property="isActivate" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, role_id, role_code, is_activate
+  </sql>
+  
+  <!-- 查询列表 -->
+  <select id="findList" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_core_user_role
+    where is_activate = '1001'
+    <if test="userId != null and userId !=''">
+      and user_id = #{userId,jdbcType=CHARVAR}
+    </if>
+
+  </select>
+  
+  <!-- 根据Id删除 -->
+  <delete id="deletes" >
+    delete from t_core_user_role
+    where id in
+    <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+       #{item,jdbcType=VARCHAR}
+    </foreach>
+     
+  </delete>
+  
+   <!-- 根据用户ID删除 -->
+  <delete id="deleteUserId" >
+    delete from t_core_user_role
+    where user_id in
+    <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+       #{item,jdbcType=VARCHAR}
+    </foreach>
+     
+  </delete>
+  
+   <!-- 根据角色ID 删除 -->
+  <delete id="deleteRoleId" >
+    delete from t_core_user_role
+    where role_id in
+    <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+       #{item,jdbcType=VARCHAR}
+    </foreach>
+     
+  </delete>
+  
+   <!-- 根据角色代码值删除 -->
+  <delete id="deleteRoleCode" >
+    delete from t_core_user_role
+    where role_code in
+    <foreach collection="array" item="item" index="index" open="(" separator="," close=")">
+       #{item,jdbcType=VARCHAR}
+    </foreach>
+     
+  </delete>
+  
+  
+  <!-- 保存 -->
+  <insert id="addUserRole" parameterType="pers.liujunyi.bookkeeping.entity.TCoreUserRole" >
+    <!-- 生成主键的uuid -->
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">  
+        select  replace(uuid(),'-','')  from dual  
+    </selectKey> 
+    
+    insert into t_core_user_role (id, user_id, role_id, 
+      role_code, is_activate)
+    values
+     <foreach collection="list" item="item" index="index" separator="," >  
+         (#{item.id,jdbcType=VARCHAR}, #{item.userId,jdbcType=VARCHAR}, #{item.roleId,jdbcType=VARCHAR}, 
+         #{item.roleCode,jdbcType=VARCHAR}, #{item.isActivate,jdbcType=CHAR})
+      </foreach>
+  </insert>
+  
+
+</mapper>

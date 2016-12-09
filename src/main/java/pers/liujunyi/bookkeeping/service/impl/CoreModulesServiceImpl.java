@@ -68,6 +68,7 @@ public class CoreModulesServiceImpl implements ICoreModulesService {
 				modules.setCreateDate(DateTimeUtil.getCurrentDateTime());
 				modules.setCreateUser(userId);
 				modules.setDeleteFlag(Constants.DELETE_NONE_STATUS);
+				modules.setModuleCode(getNewCodeValue(modules.getModulePid()));
 				count.set(modulesMapper.addModules(modules));
 			}else if(task.trim().equals(Constants.EDIT)){
 				modules.setUpdateDate(DateTimeUtil.getCurrentDateTime());

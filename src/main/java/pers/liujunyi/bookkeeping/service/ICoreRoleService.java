@@ -3,6 +3,8 @@ package pers.liujunyi.bookkeeping.service;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.springframework.stereotype.Component;
+
 import pers.liujunyi.bookkeeping.entity.TCoreRole;
 
 /***
@@ -16,6 +18,7 @@ import pers.liujunyi.bookkeeping.entity.TCoreRole;
  * @version 1.0
  * @author liujunyi
  */
+@Component
 public interface ICoreRoleService {
 
 	/**

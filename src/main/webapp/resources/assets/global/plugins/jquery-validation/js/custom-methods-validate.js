@@ -37,6 +37,14 @@ jQuery.validator.addMethod("chineseNumber", function(value, element, params) {
 	}, "该字段值只能输入中文、字母或者数字.");
 
 /**
+ * 只能输入中文、字母
+ */
+jQuery.validator.addMethod("chineseLetter", function(value, element, params) {
+		return this.optional(element) || /^[A-Za-z\u4e00-\u9fa5]*$/.test(value);
+	}, "该字段值只能输入中文或者字母.");
+	
+	
+/**
  * 只能输入字母
  */
 jQuery.validator.addMethod("letter", function(value, element, params) {

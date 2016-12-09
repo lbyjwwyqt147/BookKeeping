@@ -15,6 +15,7 @@ import pers.liujunyi.bookkeeping.entity.TCoreRoleModule;
 import pers.liujunyi.bookkeeping.mapper.ICoreRoleModuleMapper;
 import pers.liujunyi.bookkeeping.service.ICoreRoleModuleService;
 import pers.liujunyi.bookkeeping.util.Constants;
+import pers.liujunyi.bookkeeping.util.KeyUtil;
 
 /***
  * 文件名称: CoreRoleModuleServiceImpl.java
@@ -52,6 +53,7 @@ public class CoreRoleModuleServiceImpl implements ICoreRoleModuleService {
 				String[] moduleCodes = moduleCode.split(",");
 				for(int i = 0; i < moduleCodes.length; i++){
 					TCoreRoleModule  roleModule = new TCoreRoleModule();
+					roleModule.setId(KeyUtil.uuid());
 					roleModule.setIsActivate(Constants.DELETE_NONE_STATUS);
 					roleModule.setModuleCode(moduleCodes[i]);
 					roleModule.setModuleId(moduleId);

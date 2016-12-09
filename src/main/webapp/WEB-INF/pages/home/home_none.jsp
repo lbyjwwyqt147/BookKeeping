@@ -212,9 +212,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                                     <span class="arrow"></span>
                                 </a>
                                 <ul class="sub-menu">
-                                    <li class="nav-item  ">
+                                 <li class="nav-item ">
+                                        <a href="javaScript:HomePage.openIframePage('bookkeeping/user/initList')" class="nav-link ">
+                                            <span class="title">用户</span>
+                                        </a>
+                                    </li>
+                                   <li class="nav-item ">
+                                        <a href="javaScript:HomePage.openIframePage('bookkeeping/modules/initList')" class="nav-link ">
+                                            <span class="title">资源模块</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ">
                                         <a href="javaScript:HomePage.openIframePage('bookkeeping/role/initList')" class="nav-link ">
                                             <span class="title">角色</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a href="javaScript:HomePage.openIframePage('bookkeeping/function/initList')" class="nav-link ">
+                                            <span class="title">功能权限</span>
                                         </a>
                                     </li>
                                     <li class="nav-item  ">
