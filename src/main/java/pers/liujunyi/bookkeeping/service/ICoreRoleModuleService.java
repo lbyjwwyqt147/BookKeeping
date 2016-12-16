@@ -70,4 +70,6 @@ public interface ICoreRoleModuleService {
 	 * @return
 	 */
 	public CopyOnWriteArrayList<TCoreRoleModule> findList(ConcurrentMap<String,Object> map);
+	
+	
 }

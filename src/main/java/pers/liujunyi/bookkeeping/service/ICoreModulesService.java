@@ -8,6 +8,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 
 
+
+
+
+
+
 import javax.servlet.http.HttpServletRequest;
 
 import pers.liujunyi.bookkeeping.entity.TCoreModules;
@@ -115,4 +120,26 @@ public interface ICoreModulesService {
 	 * @return
 	 */
 	public Long getModulesCount();
+	
+	/**
+	 * 根据用户获取角色对应的资源菜单
+	 * @param userId  用户ID
+	 * @return
+	 */
+	public CopyOnWriteArrayList<TCoreModules> findModules(String userId);
+	
+	/**
+	 * 初始化用户菜单结构
+	 * @param userId
+	 * @return
+	 */
+	public String findModuleStructure(String userId);
+	
+	/**
+	 * 查询详细信息
+	 * @param id
+	 * @param moduleCode
+	 * @return
+	 */
+	public TCoreModules getModuleInfo(String id,String moduleCode);
 }

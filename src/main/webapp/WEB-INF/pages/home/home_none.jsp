@@ -165,84 +165,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <!-- DOC: Set data-keep-expand="true" to keep the submenues expanded -->
                         <!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
                        <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; ">
-                        <ul class="page-sidebar-menu  page-header-fixed  page-sidebar-menu-fixed" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200"  data-initialized="1" style="overflow: hidden; width: auto; ">
-                            <!-- DOC: To remove the sidebar toggler from the sidebar you just need to completely remove the below "sidebar-toggler-wrapper" LI element -->
-                            <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
-                            <li class="sidebar-toggler-wrapper hide">
-                                <div class="sidebar-toggler">
-                                    <span></span>
-                                </div>
-                            </li>
-                            <!-- END SIDEBAR TOGGLER BUTTON -->
-                            <!-- DOC: To remove the search box from the sidebar you just need to completely remove the below "sidebar-search-wrapper" LI element -->
-                          
-                            <!-- 第一级菜单项 -->
-                            <li class="nav-item start active open">
-                                <a href="javascript:;" class="nav-link nav-toggle">
-                                    <i class="icon-home"></i>
-                                    <span class="title">首页</span>
-                                    <span class="selected"></span>
-                                    <span class="arrow open"></span>
-                                </a>
-                                 <!-- 第二级菜单项 -->
-                                <ul class="sub-menu">
-                                    <!-- <li class="nav-item start active open">
-                                        <a href="javaScript:HomePage.openIframePage('')" class="nav-link ">
-                                            <i class="fa fa-file-powerpoint-o"></i>
-                                            <span class="title">PPT管理</span>
-                                            <span class="selected"></span>
-                                        </a>
-                                    </li>
-                                     <li class="nav-item  ">
-                                        <a href="javaScript:HomePage.openIframePage('')" class="nav-link ">
-                                           
-                                            <i class="fa fa-cloud-upload"></i>
-                                            <span class="title">上传PPT</span>
-                                        </a>
-                                    </li> -->
-                                </ul>
-                            </li>
-                          <!--   <li class="heading">
-                                <h3 class="uppercase">Features</h3>
-                            </li> -->
-                          <li class="nav-item  ">
-                                <a href="javascript:;" class="nav-link nav-toggle">
-                                    <i class="icon-settings"></i>
-                                    <span class="title">系统设置</span>
-                                    <span class="arrow"></span>
-                                </a>
-                                <ul class="sub-menu">
-                                 <li class="nav-item ">
-                                        <a href="javaScript:HomePage.openIframePage('bookkeeping/user/initList')" class="nav-link ">
-                                            <span class="title">用户</span>
-                                        </a>
-                                    </li>
-                                   <li class="nav-item ">
-                                        <a href="javaScript:HomePage.openIframePage('bookkeeping/modules/initList')" class="nav-link ">
-                                            <span class="title">资源模块</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item ">
-                                        <a href="javaScript:HomePage.openIframePage('bookkeeping/role/initList')" class="nav-link ">
-                                            <span class="title">角色</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item ">
-                                        <a href="javaScript:HomePage.openIframePage('bookkeeping/function/initList')" class="nav-link ">
-                                            <span class="title">功能权限</span>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item  ">
-                                        <a href="javaScript:HomePage.openIframePage('bookkeeping/dict/initList')" class="nav-link ">
-                                            <span class="title">业务字典</span>
-                                        </a>
-                                    </li>
-                                    
-                                </ul>
-                            </li> 
-                           
-                        </ul>
-                        <!-- END SIDEBAR MENU -->
+                       
+                          ${moduleList}
+                       
+                       
+                        
                         <!-- END SIDEBAR MENU -->
                     </div>
                     </div>
@@ -281,7 +208,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                         <div class="clearfix"></div>
                         
                         <div class="page-content-white">
-                           <iframe id="content_iframe" src="teacher/myUpfile/initListPage" scrolling="auto" width="100%" height="88%" frameborder="0"></iframe>
+                           <iframe id="content_iframe" src="teacher/myUpfile/initListPage" scrolling="auto" width="100%" height="88%" frameborder="0" allowfullscreen></iframe>
                        
                         </div>
                        

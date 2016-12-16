@@ -60,4 +60,5 @@ public interface ICoreRoleModuleMapper {
 	 * @return
 	 */
 	public CopyOnWriteArrayList<TCoreRoleModule> findList(ConcurrentMap<String,Object> map);
+	
 }

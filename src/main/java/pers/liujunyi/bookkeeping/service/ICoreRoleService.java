@@ -18,7 +18,6 @@ import pers.liujunyi.bookkeeping.entity.TCoreRole;
  * @version 1.0
  * @author liujunyi
  */
-@Component
 public interface ICoreRoleService {
 
 	/**

@@ -42,8 +42,11 @@ var Login = function() {
          userLogin : function(){
             //判断是否表单验证成功,进行登录操作
          	if(handleLogin.validateLoginForm()){
-         	    $.ajax({
-         	      url : "bookkeeping/user/userLogin",
+         		jQuery('.login-form')[0].submit(); 
+         		//main/customLogin.do   bookkeeping/user/userLogin
+         		
+         	   /* $.ajax({
+         	      url : "main/customLogin.do",
          	      data :{
          	            'login_user' : handleLogin.loginUser,
          	            'login_pwd' : handleLogin.loginPwd,
@@ -53,6 +56,7 @@ var Login = function() {
          	      dataType : "json",
          	      type : "post",
          	      success : function(data, textStatus){
+         	      	console.log(data);
          	         if(data.success){
          	         	  jQuery('.login-form')[0].reset();
          	         	  
@@ -61,7 +65,7 @@ var Login = function() {
 							  
 					       });
 					       //跳转止首页
-					       window.location.href="bookkeeping/home/initHome";
+					       window.location.href="index.html";
 					       
          	         }else{
          	           handleLogin.alertMessage("#login-bootstrap_alerts",data.message,"danger","",20);
@@ -71,7 +75,7 @@ var Login = function() {
          	          handleLogin.alertMessage("#login-bootstrap_alerts","网络链接失败.","warning","",20);
          	      }
 
-         	   });
+         	   });*/
          	}
          
          },

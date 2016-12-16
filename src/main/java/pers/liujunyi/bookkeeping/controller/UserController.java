@@ -8,8 +8,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -100,12 +103,19 @@ public class UserController {
 	 * @param response
 	 */
 	@RequestMapping(value="/logOut",method=RequestMethod.POST)
-	public void logOut(String userCode,HttpServletRequest request,HttpServletResponse response){
+	public void logOut(String userCode,HttpServletRequest request,HttpServletResponse response,Authentication authentication){
 		ConcurrentMap<String, Object> map = new ConcurrentHashMap<String, Object>();
 		AtomicBoolean success = new AtomicBoolean(false);
 		String message = "退出系统失败.";
 		try {
 			 request.getSession().removeAttribute(Constants.USER_SESSION);
+			 HttpSession session = request.getSession(false);
+	         if (session != null) {
+	        	  //使当前会话失效
+	              session.invalidate(); 
+	         }
+	         //清空安全上下文
+	         SecurityContextHolder.clearContext(); 
 			 success.set(true);
 			 message = "退出系统成功.";
 		} catch (Exception e) {

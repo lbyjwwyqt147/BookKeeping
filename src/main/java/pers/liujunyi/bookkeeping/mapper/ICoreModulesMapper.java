@@ -67,6 +67,14 @@ public interface ICoreModulesMapper {
 	public CopyOnWriteArrayList<TCoreModules> findModulesList(ConcurrentMap<String,Object> map);
 	
 	/**
+	 * 查询详细信息
+	 * @param id
+	 * @param moduleCode
+	 * @return
+	 */
+	public TCoreModules getModuleInfo(@Param("id")String id,@Param("moduleCode")String moduleCode);
+	
+	/**
 	 * 获取父级编号下的最大编号值
 	 * @param modulePid  父级编号
 	 * @return 返回最大编号值
@@ -78,4 +86,11 @@ public interface ICoreModulesMapper {
 	 * @return
 	 */
 	public Long getModulesCount();
+	
+	/**
+	 * 根据用户获取资源菜单(去除多个角色中有重复的资源菜单)
+	 * @param userId  用户ID
+	 * @return
+	 */
+	public CopyOnWriteArrayList<TCoreModules> findModules(@Param("userId")String userId);
 }

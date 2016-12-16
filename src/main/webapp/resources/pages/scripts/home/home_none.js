@@ -6,6 +6,18 @@
 var HomePage = {
     
 	/**
+	 * 选择一级菜单事件
+	 * @param {} obj
+	 */
+	selectClick:function(obj){
+		console.log(obj);
+	  $(".nav-item").removeClass("active");
+	  $(".nav-item").removeClass("open");
+	  $(obj).addClass("active");
+	   $(obj).addClass("open");
+	},
+	
+	/**
 	 * 打开相关菜单项页面
 	 * @param {} url
 	 * @param {} params

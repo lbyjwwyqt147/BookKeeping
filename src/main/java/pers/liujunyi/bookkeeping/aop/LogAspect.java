@@ -120,17 +120,21 @@ public class LogAspect {
         String optTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTimeMillis);  
         // 输出字符串
         StringBuffer printBuffer = new StringBuffer();
-        printBuffer.append("\n =========== Controller 控制台日志 开始 =============== ");
-        printBuffer.append("\n 开始时间 ：").append(optTime);
-        printBuffer.append("\n 请求IP ：").append(ip);
-        printBuffer.append("\n 请求用户 ：").append(userName);
-        printBuffer.append("\n 类名称 ：").append(targetName);
-        printBuffer.append("\n 请求url地址 ：").append(requestPath);
-        printBuffer.append("\n 请求方法 ：").append(methodName);
-        printBuffer.append("\n 请求参数 ：").append(gson.toJson(inputParamMap));
-        printBuffer.append("\n 返回值 ：").append(gson.toJson(outputParamMap));
-        printBuffer.append("\n 执行总消耗时间 ：").append(endTimeMillis - startTimeMillis).append("秒");
-        printBuffer.append("\n =========== Controller 控制台日志 结束 =============== ");
+        printBuffer.append("\n");
+        printBuffer.append("\n ********************************** Controller 控制台日志 开始  ********************************** ");
+        printBuffer.append("\n");
+        printBuffer.append("\n  开始时间 ：").append(optTime);
+        printBuffer.append("\n  请求IP ：").append(ip);
+        printBuffer.append("\n  请求用户 ：").append(userName);
+        printBuffer.append("\n  类名称 ：").append(targetName);
+        printBuffer.append("\n  请求url地址 ：").append(requestPath);
+        printBuffer.append("\n  请求方法 ：").append(methodName);
+        printBuffer.append("\n  请求参数 ：").append(gson.toJson(inputParamMap));
+        printBuffer.append("\n  返回值 ：").append(gson.toJson(outputParamMap));
+        printBuffer.append("\n  执行总消耗时间 ：").append(endTimeMillis - startTimeMillis).append("毫秒");
+        printBuffer.append("\n");
+        printBuffer.append("\n ********************************** Controller 控制台日志 结束  ********************************** ");
+        printBuffer.append("\n");
         logger.info(printBuffer.toString());  
     }  
 	

@@ -202,4 +202,99 @@ public class CoreModulesServiceImpl implements ICoreModulesService {
 		return modulesMapper.deletesAndModuleCodes(moduleCoes);
 	}
 
+	@Override
+	public CopyOnWriteArrayList<TCoreModules> findModules(String userId) {
+		return modulesMapper.findModules(userId);
+	}
+
+	@Override
+	public String findModuleStructure(String userId) {
+		//开始
+		StringBuffer moduleBuffer = new StringBuffer("<ul class=\"page-sidebar-menu  page-header-fixed  page-sidebar-menu-fixed\" data-keep-expanded=\"false\" data-auto-scroll=\"true\" data-slide-speed=\"200\"  data-initialized=\"1\" style=\"overflow: hidden; width: auto; \">");
+		try {
+			ConcurrentMap<String, Object> map =  new ConcurrentHashMap<String, Object>();
+			map.put("modulePid", "1");
+			//资源模块列表
+			CopyOnWriteArrayList<TCoreModules> modules = null;
+			// 1：表示超级管理员 拥有所有资源
+			if(userId.trim().equals("1")){
+				
+				modules = modulesMapper.findModulesList(map);
+			}else {
+				modules = modulesMapper.findModules(userId);
+			}
+			if(modules != null && modules.size() > 0){
+				AtomicInteger i = new AtomicInteger(0);
+				Iterator<?> modulesIterator = modules.iterator();
+				while(modulesIterator.hasNext()){
+					TCoreModules module = (TCoreModules) modulesIterator.next();
+					//第一级菜单
+					if(i.get() == 0){
+						moduleBuffer.append("<li class=\"nav-item start active open\">");
+					}else {
+						moduleBuffer.append("<li class=\"nav-item \">");
+					}
+						
+					moduleBuffer.append("<a href=\"javascript:;\" class=\"nav-link nav-toggle\">");
+					moduleBuffer.append("<i class=\""+module.getModuleIconOne()+"\"></i>");
+					moduleBuffer.append("<span class=\"title\">"+module.getModuleName()+"</span>");
+					if(i.get() == 0){
+						moduleBuffer.append("<span class=\"selected\"></span>");
+						moduleBuffer.append("<span class=\"arrow open\"></span>");
+					}else{
+						moduleBuffer.append("<span class=\"arrow\"></span>");
+					}
+					moduleBuffer.append("</a>");
+					
+					//下级菜单
+					map.clear();
+					map.put("modulePid", module.getModuleCode());
+					CopyOnWriteArrayList<TCoreModules> chlidList = modulesMapper.findModulesList(map);
+					if(chlidList != null && chlidList.size() > 0){
+						moduleBuffer.append("<ul class=\"sub-menu\">");
+						Iterator<?> chlidModuleIterator = chlidList.iterator();
+						while(chlidModuleIterator.hasNext()){
+							TCoreModules chlidModule = (TCoreModules) chlidModuleIterator.next();
+							
+							moduleBuffer.append("<li class=\"nav-item \">");
+							moduleBuffer.append("<a href=\"javascript:HomePage.openIframePage('"+chlidModule.getModuleUrl()+"')\" class=\"nav-link \">");
+							moduleBuffer.append("<i class=\""+chlidModule.getModuleIconOne()+"\"></i>");
+							moduleBuffer.append("<span class=\"title\">"+chlidModule.getModuleName()+"</span>");
+							moduleBuffer.append("</a>");
+							moduleBuffer.append("</li>");
+							
+                           
+						}
+						moduleBuffer.append(" </ul>");
+					}
+					
+					moduleBuffer.append("</li>");
+						
+					/*}else {
+						moduleBuffer.append("<li class=\"nav-item\">");
+						moduleBuffer.append("<a href=\"javascript:HomePage.openIframePage('"+module.getModuleUrl()+"');\" class=\"nav-link nav-toggle\">");
+						moduleBuffer.append("<i class=\""+module.getModuleIconOne()+"\"></i>");
+						moduleBuffer.append("<span class=\"title\">"+module.getModuleName()+"</span>");
+					
+						moduleBuffer.append("</a>");
+					}*/
+					
+					/*
+					moduleBuffer.append("</ul>");*/
+					i.getAndAdd(1);
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//结尾
+		moduleBuffer.append("</ul>");
+		return moduleBuffer.toString();
+	}
+
+	@Override
+	public TCoreModules getModuleInfo(String id, String moduleCode) {
+		return modulesMapper.getModuleInfo(id, moduleCode);
+	}
 }

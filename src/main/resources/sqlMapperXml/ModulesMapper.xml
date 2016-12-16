@@ -49,6 +49,31 @@
     </if>
   </select>
   
+  <!-- 查询详细 -->
+  <select id="getModuleInfo" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List"></include>
+    from t_core_modules
+    where delete_flag = '1001'
+    <if test="id != null and id != ''">
+      and id = #{id,jdbcType=VARCHAR}
+    </if>
+    <if test="moduleCode != null and moduleCode != ''">
+      and module_code = #{moduleCode,jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+   <!-- 根据角色获取角色对应的资源菜单(去除多个角色中有重复的资源菜单)-->
+   <select id="findModules" resultMap="BaseResultMap" >
+        select 
+        m.id,  m.node_level,  m.node_status,  m.module_name,  m.module_code,  m.module_type,  m.module_url,  m.module_pid,       m.module_icon_one,  m.module_icon_two,  m.module_description,  m.is_activate,  m.delete_flag,  m.create_user,       m.create_date,  m.update_user,  m.update_date,  m.attribute_one,  m.attribute_two,  m.attribute_three  
+         from t_core_modules as m, t_core_role_module as r   
+         where m.delete_flag = '1001' and m.module_code = r.module_code 
+         and r.role_code in (select role_code from t_core_user_role where user_id = #{userId,jdbcType=VARCHAR})
+  </select>
+  
+  
+  
   <!-- 查询表中是否有数据 -->
   <select id="getModulesCount" resultType="java.lang.Long">
     select count(*) from t_core_modules where delete_flag = '1001' limit 0,3

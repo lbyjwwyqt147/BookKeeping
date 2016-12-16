@@ -19,7 +19,7 @@
     from t_core_user_role
     where is_activate = '1001'
     <if test="userId != null and userId !=''">
-      and user_id = #{userId,jdbcType=CHARVAR}
+      and user_id = #{userId,jdbcType=VARCHAR}
     </if>
 
   </select>

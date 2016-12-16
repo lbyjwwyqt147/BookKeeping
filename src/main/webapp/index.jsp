@@ -32,8 +32,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <!--  LOGO 图片结束 -->
         <!--  登录组件开始 -->
         <div class="content" style="margin-top: 8%;">
-            <!-- 登录表单开始 -->
-            <form class="login-form" action="" method="post">
+            <!-- 登录表单开始   j_spring_security_check-->
+            <form class="login-form" action="<%=basePath %>j_spring_security_check" method="post">
                 <h3 class="form-title font-green">系统登录</h3>
                 <!-- 提示信息div -->
 		        <div id="login-bootstrap_alerts" style="margin-top: 5px;"> </div>
