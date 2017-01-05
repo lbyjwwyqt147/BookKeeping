@@ -16,7 +16,9 @@ http://www.springframework.org/schema/security/spring-security.xsd">
  <http pattern="/login.html" security="none" /> 
  
  
- <http use-expressions="true" auto-config="false"  >
+ <!-- <http use-expressions="true" auto-config="true"  entry-point-ref="myAuthenticationEntryPoint"> -->
+ 
+ <http use-expressions="true" auto-config="true"  >
  
 <!--      <form-login login-page='/BookKeeping' default-target-url='/bookkeeping/home/initHome'
 		always-use-default-target='true'  authentication-failure-url="/bookkeeping/home/initDefeated" 
@@ -41,7 +43,7 @@ http://www.springframework.org/schema/security/spring-security.xsd">
             
          --> 
        <!-- 使用自定义登录验证时 不需要 form-login  注释掉     如果需要使用默认的则取消注释 -->             
-      <form-login login-page='/BookKeeping' default-target-url='/index.html'
+       <form-login login-page='/BookKeeping' default-target-url='/index.html'
 		always-use-default-target='true'  authentication-failure-url="/defeated.html" 
         username-parameter="login_user"   password-parameter="login_pwd" /> 
       <!-- <form-login /> -->
@@ -68,12 +70,19 @@ http://www.springframework.org/schema/security/spring-security.xsd">
 		然后再spring配置文件中做相应的配置，项目启动启动后，我们进行资源请求，就自动会去执行我们重定义的类进行权限判断。
 
        -->	
-     <!-- <custom-filter ref="mySecurityFilter" before="FILTER_SECURITY_INTERCEPTOR"/>  -->
+    <custom-filter ref="mySecurityFilter" before="FILTER_SECURITY_INTERCEPTOR"/> 
+    
+ 
      <!-- 自定义登录过滤 -->
      <!-- 项目使用了自定义登录处理，请注释掉security过滤 -->
      <custom-filter ref="myLoginFilter" before="FORM_LOGIN_FILTER"/> 
      
  </http>
+ 
+  <!-- 未登录的切入点 -->
+   <!-- <beans:bean id="myAuthenticationEntryPoint" class="pers.liujunyi.bookkeeping.securityFilter.MyAuthenticationEntryPoint">
+        <beans:property name="loginFormUrl" value="/login.html"></beans:property>
+   </beans:bean>   -->
  
  
   <!-- 指定登录filter的实现类 -->
@@ -85,16 +94,15 @@ http://www.springframework.org/schema/security/spring-security.xsd">
 		<beans:property name="usernameParameter" value="login_user"/>  
 		<!-- 密码字段 -->
         <beans:property name="passwordParameter" value="login_pwd"/> 
+        
+        <beans:property name="authenticationFailureHandler" ref="failureHandler"/>
+        <beans:property name="authenticationSuccessHandler" ref="successHandler"/>
 		<!-- 验证成功后要跳转的URL -->
 		<!-- <beans:property name="successUrl" value="/background/index.html" /> -->
 		<!-- 验证失败后要跳转的URL -->
 		<!-- <beans:property name="errorUrl" value="/background/login.html" /> -->
  </beans:bean> 
  
- <!-- 未登录的切入点 -->
-   <!-- <beans:bean id="myAuthenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
-        <beans:property name="loginFormUrl" value="/login.html"></beans:property>
-    </beans:bean>  -->
 
 <!-- 若访问没有权限，自动跳到下面指定的页面 -->  
   <!-- <beans:bean id="authenticationEntryPoint" class="pers.liujunyi.bookkeeping.securityFilter.MyAuthenticationEntryPoint">  
@@ -105,5 +113,14 @@ http://www.springframework.org/schema/security/spring-security.xsd">
  <authentication-manager alias="myAuthenticationManager">
 		<authentication-provider user-service-ref="myUserDetailServiceImpl" />
  </authentication-manager>
+ 
+ <!-- ajax 登录 开始 -->
+ <beans:bean id="successHandler" class="pers.liujunyi.bookkeeping.securityFilter.AjaxAuthenticationSuccessHandler">
+    
+</beans:bean>
+
+<beans:bean id="failureHandler" class="pers.liujunyi.bookkeeping.securityFilter.AjaxAuthenticationFailureHandler" />
+
+ <!-- ajax 登录 结束 -->
 
 </beans:beans>  

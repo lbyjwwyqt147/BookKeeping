@@ -294,7 +294,22 @@
     </dependency>
     <!-- 邮件发送包 结束 -->
 
+    <!-- memcached  分布式缓存   开始 -->
+     <dependency> 
+	   <groupId>com.memcached</groupId> 
+        <artifactId>java-memcached</artifactId> 
+	     <version>2.6.6.RELEASE</version> 
+	</dependency> 
+     <!-- memcached  分布式缓存   结束 -->
     
+    <!-- redis  分布式缓存   开始 -->
+     <dependency>
+     	<groupId>redis.clients</groupId>
+     	<artifactId>jedis</artifactId>
+     	<version>2.9.0</version>
+     </dependency>
+     <!-- redis  分布式缓存   结束 -->
+     
   </dependencies>
   <build>
     <plugins>

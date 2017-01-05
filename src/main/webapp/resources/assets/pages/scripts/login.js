@@ -45,8 +45,8 @@ var Login = function() {
          		jQuery('.login-form')[0].submit(); 
          		//main/customLogin.do   bookkeeping/user/userLogin
          		
-         	   /* $.ajax({
-         	      url : "main/customLogin.do",
+         	/*    $.ajax({
+         	      url : "j_spring_security_check",
          	      data :{
          	            'login_user' : handleLogin.loginUser,
          	            'login_pwd' : handleLogin.loginPwd,
@@ -55,6 +55,9 @@ var Login = function() {
          	      },
          	      dataType : "json",
          	      type : "post",
+         	      beforeSend: function (xhr) {
+                      xhr.setRequestHeader("X-Ajax-call", "true");
+                  },
          	      success : function(data, textStatus){
          	      	console.log(data);
          	         if(data.success){

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+           http://www.springframework.org/schema/beans/spring-beans.xsd">  
+  
+    <!-- 配置Socked连接池 -->
+    <bean id="memcachedPool" class="com.danga.MemCached.SockIOPool"   
+        factory-method="getInstance" init-method="initialize">  
+        <constructor-arg>  
+            <value>neeaMemcachedPool</value>  
+        </constructor-arg>  
+        <!-- 设置缓存服务器列表，当使用分布式缓存时，可以指定多个缓存服务器，这里应该设置多个不同的服务器 -->
+        <property name="servers">  
+            <list>  
+                <value>101.200.75.226:11211</value>  
+            </list>  
+        </property>  
+        <!-- 初始化连接数 -->
+        <property name="initConn">  
+            <value>20</value>  
+        </property>  
+        <!-- 初始化最小连接数 -->
+        <property name="minConn">  
+            <value>10</value>  
+        </property>  
+        <!-- 初始化最大链接数 -->
+        <property name="maxConn">  
+            <value>1000</value>  
+        </property>  
+        <!-- 初始化最大处理时间 -->
+        <property name="maxIdle">  
+            <value>36000</value>  
+        </property>
+        <!-- 设置tcp参数 需要设置false -->
+        <property name="nagle">  
+            <value>false</value>  
+        </property>  
+        <!-- 设置socket的读取等待超时值 -->
+        <property name="socketTO">  
+            <value>3000</value>  
+        </property>  
+         <!-- 设置socket的连接等待超时值 -->
+        <property name="socketConnectTO">  
+            <value>3000</value>  
+        </property> 
+         <!-- 设置连接池守护线程的睡眠时间     设置为0，维护线程不启动 -->
+        <property name="maintSleep">  
+            <value>60</value>  
+        </property> 
+    </bean>  
+    
+    <!-- memcached客户端 -->
+    <bean id="memcachedClient" class="com.danga.MemCached.MemCachedClient">  
+        <constructor-arg>  
+            <value>neeaMemcachedPool</value>  
+        </constructor-arg>  
+    </bean>  
+</beans>  

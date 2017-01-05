@@ -13,6 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 
 
+
 import javax.servlet.http.HttpServletRequest;
 
 import pers.liujunyi.bookkeeping.entity.TCoreModules;
@@ -92,6 +93,16 @@ public interface ICoreModulesService {
 	 * @return
 	 */
 	public CopyOnWriteArrayList<TCoreModules> findModulesList(ConcurrentMap<String,Object> map);
+	
+	/**
+	 * 根据父级编号 获取下级信息(符合角色模块条件的)
+	 * @param modulePid    父级编号
+	 * @param userId       用户ID
+	 * @param isActivate   1001:激活  1002:锁定 
+	 * @param map
+	 * @return
+	 */
+	public CopyOnWriteArrayList<TCoreModules> findRolueModulesList(ConcurrentMap<String,Object> map);
 	
 	/**
 	 * 获取父级编号下的最大编号值

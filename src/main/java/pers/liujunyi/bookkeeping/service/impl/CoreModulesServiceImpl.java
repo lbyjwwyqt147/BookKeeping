@@ -249,7 +249,13 @@ public class CoreModulesServiceImpl implements ICoreModulesService {
 					//下级菜单
 					map.clear();
 					map.put("modulePid", module.getModuleCode());
-					CopyOnWriteArrayList<TCoreModules> chlidList = modulesMapper.findModulesList(map);
+					map.put("userId", userId);
+					CopyOnWriteArrayList<TCoreModules> chlidList = null;
+					if(userId.trim().equals("1")){
+						chlidList = modulesMapper.findModulesList(map);
+					}else{
+						 chlidList = modulesMapper.findRolueModulesList(map);
+					}
 					if(chlidList != null && chlidList.size() > 0){
 						moduleBuffer.append("<ul class=\"sub-menu\">");
 						Iterator<?> chlidModuleIterator = chlidList.iterator();
@@ -296,5 +302,11 @@ public class CoreModulesServiceImpl implements ICoreModulesService {
 	@Override
 	public TCoreModules getModuleInfo(String id, String moduleCode) {
 		return modulesMapper.getModuleInfo(id, moduleCode);
+	}
+
+	@Override
+	public CopyOnWriteArrayList<TCoreModules> findRolueModulesList(
+			ConcurrentMap<String, Object> map) {
+		return modulesMapper.findRolueModulesList(map);
 	}
 }

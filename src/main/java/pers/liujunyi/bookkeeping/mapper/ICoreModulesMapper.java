@@ -67,6 +67,16 @@ public interface ICoreModulesMapper {
 	public CopyOnWriteArrayList<TCoreModules> findModulesList(ConcurrentMap<String,Object> map);
 	
 	/**
+	 * 根据父级编号 获取下级信息(符合角色模块条件的)
+	 * @param modulePid    父级编号
+	 * @param userId       用户ID
+	 * @param isActivate   1001:激活  1002:锁定 
+	 * @param map
+	 * @return
+	 */
+	public CopyOnWriteArrayList<TCoreModules> findRolueModulesList(ConcurrentMap<String,Object> map);
+	
+	/**
 	 * 查询详细信息
 	 * @param id
 	 * @param moduleCode

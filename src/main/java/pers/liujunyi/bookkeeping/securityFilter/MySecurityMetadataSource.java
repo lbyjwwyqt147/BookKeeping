@@ -107,14 +107,16 @@ public class MySecurityMetadataSource implements
 				// 关联代码：com.huaxin.security.MyUserDetailServiceImpl#obtionGrantedAuthorities
 				ConfigAttribute configAttribute = new SecurityConfig("ROLE_" + userRole.getRoleCode());
 				configAttributes.add(configAttribute);
-				resourceMap.put(userRole.getRoleCode(), configAttributes);
+				//resourceMap.put(userRole.getRoleCode(), configAttributes);
 				//获取角色对应的资源
-				/*params.put("roleCode", userRole.getRoleCode());
+				params.put("roleCode", userRole.getRoleCode());
 				CopyOnWriteArrayList<TCoreRoleModule> roleModules = roleModuleService.findList(params);
+				System.out.println(userRole.getRoleCode() + " 菜单 大小 ： " + roleModules);
 				for (TCoreRoleModule roleModule : roleModules) {
 					TCoreModules modules = modulesService.getModuleInfo(null, roleModule.getModuleCode());
+					System.out.println("角色："+"ROLE_" + userRole.getRoleCode() + "\t url：" +modules.getModuleUrl() );
 					resourceMap.put(modules.getModuleUrl(), configAttributes);
-				}*/
+				}
 				//CopyOnWriteArrayList<TCoreModules> modulesList =  modulesService.
 				
 				
