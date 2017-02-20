@@ -54,17 +54,31 @@ public class SenderController {
 			//用户
 			String loginUser = paramsMap.get("loginUser").toString();
 			if(!email.equals("")){
-				ISenderProviderService provider = null;
-				if(type.equals(Constants.SMS)){
-					
-				}else{
-					provider =  new SendMailFactory();
-					ISenderService sender = provider.produce();
-					success = sender.sendSecurityCode(email);
-					if(success.get()){
-						message = "验证码发送成功.";
+				
+				ThreadPool<Integer> pool = new ThreadPool<Integer>(5);
+				
+				pool.addJob(new Runnable() {
+					public void run() {
+						
+						//发送验证码业务逻辑处理
+						ISenderProviderService provider = null;
+						if(type.equals(Constants.SMS)){
+							
+						}else{
+							provider =  new SendMailFactory();
+							ISenderService sender = provider.produce();
+							success = sender.sendSecurityCode(email);
+							if(success.get()){
+								message = "验证码发送成功.";
+							}
+						}
+						
 					}
-				}
+				});
+					
+				
+				
+				
 			}else{
 				if(type.equals(Constants.SMS)){
 					message = "手机号码不能为空.";
