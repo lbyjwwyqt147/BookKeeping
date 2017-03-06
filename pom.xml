@@ -317,6 +317,11 @@
      	<version>5.7.0</version>
      </dependency>
      <!-- MQ 消息中间件 结束 -->
+     <dependency>
+     	<groupId>org.springframework.security</groupId>
+     	<artifactId>spring-security-acl</artifactId>
+     	<version>4.2.1.RELEASE</version>
+     </dependency>
   </dependencies>
   <build>
     <plugins>

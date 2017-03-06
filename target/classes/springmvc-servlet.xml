@@ -14,6 +14,7 @@
     http://www.springframework.org/schema/aop
     http://www.springframework.org/schema/aop/spring-aop.xsd">
     
+    <context:annotation-config />
     <!-- 启动时扫描所有的controller -->
     <context:component-scan base-package="pers.liujunyi.bookkeeping.controller" />
     <!-- 激活AOP自动代理功能 -->

@@ -12,7 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 /***
- *    
+ * 每次前端发送一个http请求，都会先调用这里 验证是否有权限访问   
  * 自己实现的过滤用户请求类，也可以直接使用 FilterSecurityInterceptor
  * AccessdecisionManager在Spring security中是很重要的。  
  * 所有的Authentication实现需要保存在一个GrantedAuthority对象数组中。
@@ -60,17 +60,22 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
 
 	//这个方法在url请求时才会调用，服务器启动时不会执行这个方法，前提是需要在<http>标签内设置  <custom-filter>标签  
     /* 
+     * 检查用户是否够权限访问资源  
      * 参数说明： 
      * 1、configAttributes 装载了请求的url允许的角色数组 。这里是从MySecurityMetadataSource里的loadResourceDefine方法里的atts对象取出的角色数据赋予给了configAttributes对象 
-     * 2、authentication 装载了从数据库读出来的角色 数据。这里是从MyUserDetailsService里的loadUserByUsername方法里的auths对象的值传过来给 authentication 对象 
-     *   
-     * */ 
+     * 2、authentication 装载了从数据库读出来的角色 数据。这里是从MyUserDetailServiceImpl类中里的loadUserByUsername方法里的auths对象的值传过来给 authentication 对象 
+     * 
+	 * 
+     * @param    authentication是从spring的全局缓存SecurityContextHolder中拿到的，里面是用户的权限信息  
+     * @param    object是url
+     * @param    configAttributes所需的权限  
+	 */  
 	@Override
 	public void decide(Authentication authentication, Object obj,
 			Collection<ConfigAttribute> configAttributes) throws AccessDeniedException,
 			InsufficientAuthenticationException {
 		
-		System.err.println(" ---------------  进入MyAccessDecisionManager --------------- ");
+		System.err.println(" ---------------  进入MyAccessDecisionManager 验证是否具有资源权限--------------- ");
 		if(configAttributes == null) {
 			return;
 		}
@@ -80,14 +85,14 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
 			ConfigAttribute configAttribute = iterator.next();
 			//访问所请求资源所需要的权限
 			String needPermission = configAttribute.getAttribute();
-			//System.out.println("needPermission is " + needPermission);
+	
 			//用户所拥有的权限authentication
 			for(GrantedAuthority ga : authentication.getAuthorities()) {
 				System.out.println(ga.getAuthority());
             	/** 判断两个请求的url页面的权限和用户的权限是否相同，如相同，允许访问 */
 				if(needPermission.equals(ga.getAuthority())) {
 					/* <intercept-url pattern="/**" access="ROLE_ADMIN" /> 
-                     * 如果applicationContext-security.xml的http标签里面有这种配置， 
+                     * 如果spring-security.xml的http标签里面有这种配置， 
                      * 在needRole为ROLE_USER时，即使needRole和ga.getAuthority权限匹配了，但权限是ROLE_USER，即使执行了return， 
                      * 还是会无法访问请求的url页面，因为最终都是以http标签里的权限来拦截，即只能在权限为 ROLE_ADMIN才可访问                                           
                      */ 
@@ -97,7 +102,7 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
 		}
 		//没有权限
 		/** 如果上面的needRole和ga.getAuthority两个权限没有匹配，将不允许访问 */
-        /** 没有权限    会跳转到index.jsp页面 */  
+        /**  执行这里，后台是会抛异常的，但是界面会跳转到所配的access-denied-page页面     */  
 		throw new AccessDeniedException(" 没有权限访问！ ");
 
 	}

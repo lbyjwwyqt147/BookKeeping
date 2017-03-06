@@ -459,9 +459,12 @@
   <!-- 根据登录名和登录密码查询用户信息 -->
   <select id="getSingleUserInfo" resultMap="userResultMap">
      select id,user_code,is_activate,is_admin from t_core_user  where
-     login_user = #{loginUser,jdbcType=VARCHAR} and 
-     login_pwd = #{loginPwd,jdbcType=VARCHAR} and
-     delete_flag = '1001'
+     login_user = #{loginUser,jdbcType=VARCHAR} 
+     <if test="loginPwd != null and  loginPwd != ''">
+       and login_pwd = #{loginPwd,jdbcType=VARCHAR}
+     </if>
+      and
+      delete_flag = '1001'
   </select>
   
   <select id="getSingleUserEInfo" resultMap="userResultMap">

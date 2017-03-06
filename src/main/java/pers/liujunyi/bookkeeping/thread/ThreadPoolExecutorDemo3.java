@@ -13,6 +13,11 @@ public class ThreadPoolExecutorDemo3 {
 			@Override
 			public void run() {
 				send("张三");
+			
+				
+				新增数据
+				
+				又执行查询操作
 				
 			}
 		});

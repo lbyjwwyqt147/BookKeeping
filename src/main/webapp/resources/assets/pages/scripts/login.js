@@ -42,11 +42,11 @@ var Login = function() {
          userLogin : function(){
             //判断是否表单验证成功,进行登录操作
          	if(handleLogin.validateLoginForm()){
-         		jQuery('.login-form')[0].submit(); 
+         		//jQuery('.login-form')[0].submit(); 
          		//main/customLogin.do   bookkeeping/user/userLogin
          		
-         	/*    $.ajax({
-         	      url : "j_spring_security_check",
+         	    $.ajax({
+         	      url : "bookkeeping/user/userLogin",
          	      data :{
          	            'login_user' : handleLogin.loginUser,
          	            'login_pwd' : handleLogin.loginPwd,
@@ -78,7 +78,7 @@ var Login = function() {
          	          handleLogin.alertMessage("#login-bootstrap_alerts","网络链接失败.","warning","",20);
          	      }
 
-         	   });*/
+         	   });
          	}
          
          },

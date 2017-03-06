@@ -9,6 +9,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -36,6 +41,9 @@ public class CoreUserServiceImpl implements ICoreUserService {
 
 	@Autowired
 	private ICoreUserMapper userMapper;
+	
+	@Autowired
+	private AuthenticationManager myAuthenticationManager;
 	
 	@Override
 	public int addUser(TCoreUser user) {
@@ -77,8 +85,20 @@ public class CoreUserServiceImpl implements ICoreUserService {
         //返回消息信息
         String message = "帐号或者密码不正确.";
         try {
+        	
+        	
+        	
+        	
+        	
 			TCoreUser user = userMapper.getSingleUserInfo(loginUser, loginPwd);
 			if(user != null){
+				
+				//会进入MyUserDetailServiceImpl 类中验证权限
+				Authentication authentication = myAuthenticationManager
+						.authenticate(new UsernamePasswordAuthenticationToken(user.getLoginUser(),user.getLoginPwd()));
+				SecurityContext securityContext = SecurityContextHolder.getContext();
+				securityContext.setAuthentication(authentication);
+				
 				map.put("userCode", user.getUserCode());
 				map.put("id", user.getId());
 				String[] userArray = new String[]{user.getId(),user.getUserCode()};

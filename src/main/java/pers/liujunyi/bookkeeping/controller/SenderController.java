@@ -55,7 +55,7 @@ public class SenderController {
 			String loginUser = paramsMap.get("loginUser").toString();
 			if(!email.equals("")){
 				
-				ThreadPool<Integer> pool = new ThreadPool<Integer>(5);
+			/*	ThreadPool<Integer> pool = new ThreadPool<Integer>(5);
 				
 				pool.addJob(new Runnable() {
 					public void run() {
@@ -74,7 +74,7 @@ public class SenderController {
 						}
 						
 					}
-				});
+				});*/
 					
 				
 				

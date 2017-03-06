@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.mail.internet.MimeMessage;
@@ -162,5 +163,7 @@ public class MailSenderServiceImpl implements ISenderService {
 		return success.get();
 
 	}
+	
+
 
 }

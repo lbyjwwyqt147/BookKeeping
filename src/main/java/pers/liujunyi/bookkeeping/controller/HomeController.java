@@ -38,9 +38,23 @@ public class HomeController {
 	 */
 	@RequestMapping(value="login.html")
 	public ModelAndView initLogin(HttpServletRequest request,HttpServletResponse response){
-		ModelAndView mv = new ModelAndView("index");
+		ModelAndView mv = new ModelAndView();
 		return mv;
 	}
+	
+	
+	/**
+	 * 初始化无权限页面
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value="noAuthority.html")
+	public ModelAndView initNoAuthority(HttpServletRequest request,HttpServletResponse response){
+		ModelAndView mv = new ModelAndView("pages/error/no_ authority");
+		return mv;
+	}
+	
 	
 	/**
 	 * 初始化首页页面

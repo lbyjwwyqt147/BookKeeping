@@ -7,7 +7,11 @@
        <typeAlias type="pers.liujunyi.bookkeeping.entity.TCoreUser" alias="CoreUser"/>
        <typeAlias type="pers.liujunyi.bookkeeping.entity.TCoreAttachment" alias="CoreAttachment"/>
        <typeAlias type="pers.liujunyi.bookkeeping.entity.TCoreDictionary" alias="CoreDictionary"/>
-       
+       <typeAlias type="pers.liujunyi.bookkeeping.entity.TCoreRole" alias="CoreRole"/>
+       <typeAlias type="pers.liujunyi.bookkeeping.entity.TCoreModules" alias="CoreModules"/>
+       <typeAlias type="pers.liujunyi.bookkeeping.entity.TCoreFunction" alias="CoreFunction"/>
+       <typeAlias type="pers.liujunyi.bookkeeping.entity.TCoreUserRole" alias="CoreUserRole"/>
+       <typeAlias type="pers.liujunyi.bookkeeping.entity.TCoreRoleModule" alias="CoreRoleModule"/>
     </typeAliases>
     
      <plugins>
@@ -43,5 +47,11 @@
         <mapper resource="sqlMapperXml/UserMapper.xml" />  
         <mapper resource="sqlMapperXml/AttachmentMapper.xml" />  
         <mapper resource="sqlMapperXml/DictionaryMapper.xml" />  
+        <mapper resource="sqlMapperXml/RoleMapper.xml" />  
+        <mapper resource="sqlMapperXml/ModulesMapper.xml" /> 
+        <mapper resource="sqlMapperXml/FunctionMapper.xml" /> 
+        <mapper resource="sqlMapperXml/UserRoleMapper.xml" /> 
+        <mapper resource="sqlMapperXml/RoleModuleMapper.xml" /> 
+        
     </mappers>  
 </configuration>  

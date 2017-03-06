@@ -93,6 +93,7 @@ public class UserController {
 		//跨域访问
 		response.setHeader("Access-Control-Allow-Origin","*");
 		String resultJson = userService.findUserLogin(login_user, login_pwd, securityCode,request); 
+		
 		ControllerUtil.writeJsonJavaScript(response, resultJson);
 	}
 	

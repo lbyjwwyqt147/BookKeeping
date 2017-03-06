@@ -113,4 +113,9 @@ class MyTask implements Runnable {
     public void findInfo(){
     	System.out.println("我在进行查询数据...........");
     }
+    
+    
+    
+    
+    
 }

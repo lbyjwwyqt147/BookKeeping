@@ -27,7 +27,7 @@ import pers.liujunyi.bookkeeping.util.ControllerUtil;
 
 /***
  * 文件名称: MyAuthenticationFilter.java
- * 文件描述: 自定义用户登录验证
+ * 文件描述: 自定义用户登录验证(项目启动就会加载)
  * 公 司: 
  * 内容摘要: 
  * 其他说明:
@@ -49,7 +49,7 @@ public class MyAuthenticationFilter extends
 	/**
 	 * 登录失败后跳转的地址
 	 */
-	private String errorUrl = "/login.html";
+	private String errorUrl = "/noAuthority.html";
 	
 	@Autowired
 	private ICoreUserService userService;

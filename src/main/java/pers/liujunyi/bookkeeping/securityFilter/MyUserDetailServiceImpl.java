@@ -12,22 +12,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import pers.liujunyi.bookkeeping.entity.TCoreModules;
 import pers.liujunyi.bookkeeping.entity.TCoreUser;
-import pers.liujunyi.bookkeeping.entity.TCoreUserRole;
 import pers.liujunyi.bookkeeping.service.ICoreModulesService;
-import pers.liujunyi.bookkeeping.service.ICoreRoleModuleService;
-import pers.liujunyi.bookkeeping.service.ICoreRoleService;
-import pers.liujunyi.bookkeeping.service.ICoreUserRoleService;
 import pers.liujunyi.bookkeeping.service.ICoreUserService;
 
 /***
- * 文件名称: MyUserDetailServiceImpl.java
+ * 文件名称: MyUserDetailServiceImpl.java  用户请求登录会进入此类的loadUserByUsername方法 验证用户
  * 文件描述: 权限验证类
  * User userdetail该类实现 UserDetails 接口，该类在验证成功后会被保存在当前回话的principal对象中
  * 
@@ -52,32 +50,38 @@ public class MyUserDetailServiceImpl implements UserDetailsService {
 
 	@Autowired
 	private ICoreUserService userService ;
-	
 
-	@Autowired
-	private ICoreUserRoleService usersRolesService;
 	
-
 	@Autowired
 	private ICoreModulesService resourcesService;
-	
 
-	@Autowired
-	private ICoreRoleModuleService rolesAuthoritiesService;
-	
-
-	@Autowired
-	private ICoreRoleService  rolesService; 
 	
 	@Override
-	public UserDetails loadUserByUsername(String arg0)
+	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
 		
-        System.err.println("-----------MyUserDetailServiceImpl loadUserByUsername ----------- ");
+        System.err.println("-----------MyUserDetailServiceImpl loadUserByUsername 用户登录 ----------- ");
 		
+    	System.out.println(" ================== 登录名:" + username);
+        
+    	System.out.println(SecurityContextHolder.getContext().getAuthentication());
+    	
+        //UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+
+		//String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		//String username = userDetails.getUsername();
+		//System.out.println(" ===== username : " + username);
+        
 		//取得用户的权限
-		TCoreUser users = userService.getSingleUserInfo(arg0, "123456");
+		TCoreUser users = userService.getSingleUserInfo(username, null);
+		
+	
+		
 		if (users == null ) {
+			
+			System.out.println(" ================== 用户名或密码不匹配！" );
+			
 			// 在界面输出自定义的信息
 			BadCredentialsException exception = new BadCredentialsException("用户名或密码不匹配！");
 			throw exception;
@@ -85,7 +89,7 @@ public class MyUserDetailServiceImpl implements UserDetailsService {
 		
 		Collection<GrantedAuthority> grantedAuths = obtionGrantedAuthorities(users);
 		// 封装成spring security的user
-		/*User userdetail = new User(
+	    User userdetail = new User(
 				users.getLoginUser(), 
 				users.getLoginPwd(),
 				true, 
@@ -93,16 +97,8 @@ public class MyUserDetailServiceImpl implements UserDetailsService {
 				true,
 				true, 
 				grantedAuths	//用户的权限
-			);*/
-		User userdetail = new User(
-				arg0, 
-				"123456",
-				true, 
-				true, 
-				true,
-				true, 
-				grantedAuths	//用户的权限
 			);
+	
 		return userdetail;
 	}
 	
@@ -119,14 +115,18 @@ public class MyUserDetailServiceImpl implements UserDetailsService {
     	   params.put("userId", user.getId());
        }
        
-       /** 根据用户ID获取用户角色 */  
-       CopyOnWriteArrayList<TCoreUserRole> userRolesList =  usersRolesService.findList(params);
-       if(userRolesList != null && userRolesList.size() > 0){
-       	    Iterator<?> userRoleIterator = userRolesList.iterator();
-        	while(userRoleIterator.hasNext()){
-	       		TCoreUserRole userRole = (TCoreUserRole) userRoleIterator.next();
-	       		authSet.add( new SimpleGrantedAuthority("ROLE_"+userRole.getRoleCode())); 
-	       		System.out.println("当前登录人的角色==：" + "ROLE_" + userRole.getRoleCode());
+       /** 根据用户ID获取用户所拥有的模块资源 */  
+       CopyOnWriteArrayList<TCoreModules> resourcesList =  resourcesService.findModules(user.getId());
+       if(resourcesList != null && resourcesList.size() > 0){
+    	    // TODO:ZZQ 用户可以访问的资源名称（或者说用户所拥有的权限） 注意：必须"ROLE_"开头
+    	    // 关联代码：applicationContext-security.xml
+    	    // 关联代码：com.huaxin.security.MySecurityMetadataSource#loadResourceDefine
+    	    // resources.getModuleCode() :为 资源模块表中 模块编号
+       	    Iterator<?> resourcesIterator = resourcesList.iterator();
+        	while(resourcesIterator.hasNext()){
+        		TCoreModules resources = (TCoreModules) resourcesIterator.next();
+	       		System.out.println("模块编号：" + "ROLE_" + resources.getModuleCode());
+	       		authSet.add( new SimpleGrantedAuthority("ROLE_"+resources.getModuleCode())); 
         	}
        }
        

@@ -13,114 +13,44 @@ http://www.springframework.org/schema/security/spring-security.xsd">
  
  <!-- 配置不需要过滤的链接 -->
  <http pattern="/bookkeeping/user/userLogin" security="none" /> 
- <http pattern="/login.html" security="none" /> 
+ <http pattern="/login.html" security="none" />
+ <http pattern="/noAuthority.html" security="none" />
+  
  
  
  <!-- <http use-expressions="true" auto-config="true"  entry-point-ref="myAuthenticationEntryPoint"> -->
  
- <http use-expressions="true" auto-config="true"  >
+ <http use-expressions="true" auto-config="true">
+         <!-- 没有权限跳转的页面 -->
+         <access-denied-handler error-page="/pages/settings/error/defeated.jsp" />
  
-<!--      <form-login login-page='/BookKeeping' default-target-url='/bookkeeping/home/initHome'
-		always-use-default-target='true'  authentication-failure-url="/bookkeeping/home/initDefeated" 
-		 login-processing-url="/j_spring_security_check"   
-                    username-parameter="login_user"   
-                    password-parameter="login_pwd" /> -->
-         
-        <!-- 登录配置 -->
-        <!-- 
-            login-page 自定义登录页url
-            login-processing-url 登录请求拦截的url,也就是form表单提交时指定的action  默认是/j_spring_security_check
-            default-target-url 默认登录成功后跳转的url 
-            always-use-default-target 是否总是使用默认的登录成功后跳转url 
-            authentication-failure-url 登录失败后跳转的url 
-            username-parameter 用户名的请求字段 默认为userName 
-            password-parameter 密码的请求字段 默认为password 
-            authentication-success-handler-ref 指向一个AuthenticationSuccessHandler用于处理认证成功的请求,不能和default-target-url还有always-use-default-target同时使用 
-            authentication-success-forward-url 用于authentication-failure-handler-ref 
-            authentication-failure-handler-ref 指向一个AuthenticationFailureHandler用于处理失败的认证请求
-            authentication-failure-forward-url 用于authentication-failure-handler-ref 
-            authentication-details-source-ref 指向一个AuthenticationDetailsSource,在认证过滤器中使用
-            
-         --> 
+         <!-- 以上未列出的，也都必须验证才能访问   会去调用MyAccessDecisionManager 中的方法验证权限 -->
+        <intercept-url pattern="/bookkeeping/**" access="isAuthenticated()" />
+ 
+
        <!-- 使用自定义登录验证时 不需要 form-login  注释掉     如果需要使用默认的则取消注释 -->             
-       <form-login login-page='/BookKeeping' default-target-url='/index.html'
-		always-use-default-target='true'  authentication-failure-url="/defeated.html" 
-        username-parameter="login_user"   password-parameter="login_pwd" /> 
-      <!-- <form-login /> -->
-     <!-- 退出配置 -->
-     <!-- 
-        logout-url LogoutFilter要读取的url,也就是指定spring security拦截的注销url  默认/logout
-        logout-success-url 用户退出后要被重定向的url
-        invalidate-session 默认为true,用户在退出后Http session失效
-        success-handler-ref 对一个LogoutSuccessHandler的引用,用来自定义退出成功后的操作
-      -->
+      <!--  <form-login login-page='/BookKeeping'  username-parameter="username" default-target-url='/index.html'/>  -->
+      
+    
      <logout logout-url="/logout" logout-success-url="/BookKeeping" invalidate-session="true"/>
                     
      <!-- 解决出现 HTTP Status 403 - Could not verify the provided CSRF token because your session was not found. -->
      <csrf disabled="true"/>
      
-     <!-- 项目如果不使用自定义登录处理，如果使用security的登录处理，请去掉以下注释  并且注释掉自定义的过滤-->	
-      <!--  
-     Spring Sercurity要从数据库中获取用户、权限、资源来实现权限管理，需要自定义过滤器，
-	     　并且该过滤器必须在spring Security执行FILTER_SECURITY_INTERCEPTOR过滤器之前执行，
-	    　 因为该框架实现权限管理实质就是在执行action之前先执行它框架中的为权限管理制定的一系列Fliter。
-	　　我们自定的这个SercurityFilter类要继承AbstractSecurityInterceptor 接口和Filter类（负责传递一系列的Filter）,
-	　　因为我们是从数据库中获取权限验证的数据，所以还要重写FilterInvocationSecurityMetadataSource 接口，
-		AccessDecisionManager 接口，UserDetailsService 接口，只要重写了这3个接口，
-		然后再spring配置文件中做相应的配置，项目启动启动后，我们进行资源请求，就自动会去执行我们重定义的类进行权限判断。
-
-       -->	
-    <custom-filter ref="mySecurityFilter" before="FILTER_SECURITY_INTERCEPTOR"/> 
-    
+     <custom-filter ref="mySecurityFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
  
-     <!-- 自定义登录过滤 -->
-     <!-- 项目使用了自定义登录处理，请注释掉security过滤 -->
-     <custom-filter ref="myLoginFilter" before="FORM_LOGIN_FILTER"/> 
-     
  </http>
  
-  <!-- 未登录的切入点 -->
-   <!-- <beans:bean id="myAuthenticationEntryPoint" class="pers.liujunyi.bookkeeping.securityFilter.MyAuthenticationEntryPoint">
-        <beans:property name="loginFormUrl" value="/login.html"></beans:property>
-   </beans:bean>   -->
- 
- 
-  <!-- 指定登录filter的实现类 -->
-  <beans:bean id="myLoginFilter" init-method="init" class="pers.liujunyi.bookkeeping.securityFilter.MyAuthenticationFilter">
-		<beans:property name="authenticationManager" ref="myAuthenticationManager" />
-		<!-- 处理登录的url -->
-		<beans:property name="filterProcessesUrl" value="/j_spring_security_check" />
-		<!-- 帐号字段 -->
-		<beans:property name="usernameParameter" value="login_user"/>  
-		<!-- 密码字段 -->
-        <beans:property name="passwordParameter" value="login_pwd"/> 
-        
-        <beans:property name="authenticationFailureHandler" ref="failureHandler"/>
-        <beans:property name="authenticationSuccessHandler" ref="successHandler"/>
-		<!-- 验证成功后要跳转的URL -->
-		<!-- <beans:property name="successUrl" value="/background/index.html" /> -->
-		<!-- 验证失败后要跳转的URL -->
-		<!-- <beans:property name="errorUrl" value="/background/login.html" /> -->
- </beans:bean> 
- 
 
-<!-- 若访问没有权限，自动跳到下面指定的页面 -->  
-  <!-- <beans:bean id="authenticationEntryPoint" class="pers.liujunyi.bookkeeping.securityFilter.MyAuthenticationEntryPoint">  
-   <beans:property name="loginFormUrl" value="/login.html" />   
- </beans:bean>  -->  
  
  <!--验证配置，认证管理器，实现用户认证的入口，主要实现UserDetailsService接口即可 -->
  <authentication-manager alias="myAuthenticationManager">
-		<authentication-provider user-service-ref="myUserDetailServiceImpl" />
+		<authentication-provider user-service-ref="myUserDetailServiceImpl" >
+		  <password-encoder hash="md5"></password-encoder>
+		
+		</authentication-provider>
  </authentication-manager>
  
- <!-- ajax 登录 开始 -->
- <beans:bean id="successHandler" class="pers.liujunyi.bookkeeping.securityFilter.AjaxAuthenticationSuccessHandler">
-    
-</beans:bean>
 
-<beans:bean id="failureHandler" class="pers.liujunyi.bookkeeping.securityFilter.AjaxAuthenticationFailureHandler" />
-
- <!-- ajax 登录 结束 -->
 
 </beans:beans>  
